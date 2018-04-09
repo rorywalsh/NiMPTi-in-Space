@@ -56,8 +56,8 @@ function draw()
     {
         drawScene();
         fill(0, 255, 0);
-        var ax = map(accelerationX, -90, 90, 0, windowWidth);
-        var ay = map(accelerationY, -90, 90, 0, windowHeight);
+        var ax = map(accelerationX, -90, 90, -500, 500);
+        var ay = map(accelerationY, -90, 90, -500, 500);
         ellipse(ax, ay, 30, 30); // for mobile web
     }
     else
