@@ -46,7 +46,7 @@ Module['onRuntimeInitialized'] = onRuntimeInitialized;
 if(typeof WebAssembly !== undefined)
 {
   console.log("Using WASM Csound...");
-  load_script("FileManager.js", false);
+  load_script("scripts/FileManager.js", false);
   load_script("wasm/libcsound.js", false);
   load_script("wasm/FileList.js", false);
   load_script("wasm/CsoundObj.js", false);

@@ -2,7 +2,7 @@ var textAlpha = 0;
 var textAlphaSpeed = 0.01;
 var stars = [];
 var triggerStars = [];
-var centreX, centreY, mobileDevice=false;
+var centreX, centreY, mobileDevice=false, score=0;
 
 
 // Setup our canvas and create our stars
@@ -26,27 +26,35 @@ function drawScene()
 {
     speed = .1;
     background(0);
-
+    fill(255)
+    stroke(255)
+    text("Score: "+String(score), 40, 40);
     translate(centreX, centreY);
 
-
-
+    //move stars around
     for (i = 0; i < stars.length; i++)
     {
         stars[i].update();
     }
 
     // draw crosshair
-    stroke(255);
-    strokeWeight(4);
+    if(mouseIsPressed)
+    {
+      stroke(255, 255, 0);
+      strokeWeight(8);
+    }
+    else
+    {
+      stroke(255);
+      strokeWeight(4);
+    }
+
     fill(0, 0, 0, 0);
     ellipse(0, 0, 50, 50);
     line(0, -30, 0, -10);
     line(0, +30, 0, +10);
     line(-30, 0, -10, 0);
     line(+30, 0, +10, 0);
-
-    //missle
 
 }
 
@@ -115,7 +123,11 @@ function mousePressed(){
       {
           if (star.x > -5 && star.x < 5
               && star.y > -5 && star.y < 5)
-              stars.splice(i, 1);
+              {
+                score++;
+                stars.splice(i, 1);
+              }
+
       }
   }
 }
