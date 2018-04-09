@@ -6,6 +6,7 @@ var centreX, centreY;
 var score = 0;
 var offX = 0, offY = 0;
 var screenTouch = false;
+var timer = setInterval(spawnRedDwarf, 2500);;
 
 // Setup our canvas and create our stars
 function setup()
@@ -14,14 +15,12 @@ function setup()
     {
         stars.push(new Star());
     }
+
     centreX = windowWidth / 2;
     centreY = windowHeight / 2;
     var cnvs = createCanvas(windowWidth, windowHeight);
-
     cnvs.style('display', 'block');
-
     textAlign(CENTER);
-    var timer = setInterval(spawnRedDwarf, 2500);
 }
 
 // This is the main draw loop for the game
@@ -29,7 +28,6 @@ function drawScene()
 {
     speed = .1;
     background(0);
-
     translate(centreX, centreY);
 
     if (mobileCheck.android)
@@ -41,11 +39,12 @@ function drawScene()
         stars[i].update();
     }
 
-    // draw crosshair
+    // draw crosshair ===============================
     if (mouseIsPressed || screenTouch)
     {
         stroke(255, 255, 0);
         strokeWeight(8);
+        screenTouch = false;
     }
     else
     {
@@ -60,6 +59,7 @@ function drawScene()
     line(-30, 0, -10, 0);
     line(+30, 0, +10, 0);
 
+    // draw on-screen text =========================
     strokeWeight(1)
     fill(255)
     stroke(255)
@@ -136,9 +136,6 @@ function mousePressed()
     }
 }
 
-function touchEnded() {
-  screenTouch = false;
-}
 
 function touchStart() {
   screenTouch = true;
