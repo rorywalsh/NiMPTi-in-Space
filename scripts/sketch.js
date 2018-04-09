@@ -72,6 +72,12 @@ function drawScene()
 // message when the Csound object is loading
 function draw()
 {
+    if (mobileCheck.android)
+    {
+        offY += map(accelerationY, -90, 90, -5, 5);
+        offX += map(accelerationX, -90, 90, -5, 5);
+    }
+    
     csoundLoaded = true;
     if (csoundLoaded)
     {

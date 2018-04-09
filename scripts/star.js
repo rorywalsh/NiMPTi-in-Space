@@ -48,6 +48,8 @@ class Star
         {
             this.y += map(accelerationY, -90, 90, -5, 5);
             this.x += map(accelerationX, -90, 90, -5, 5);
+            this.vDirection = map(accelerationY, -90, 90, -1, 1);
+            this.hDirection = map(accelerationX, -90, 90, -1, 1);
         }
 
         if (this.hDriection != 0)
