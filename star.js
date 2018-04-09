@@ -46,7 +46,7 @@ class Star
 
         if (mobileCheck.android)
         {
-            this.y += map(accelerationX, -90, 90, -5, 5);
+            this.y += map(accelerationY, -90, 90, -5, 5);
             this.x += map(accelerationX, -90, 90, -5, 5);
         }
 
