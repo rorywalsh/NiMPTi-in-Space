@@ -27,14 +27,16 @@ function drawScene()
     speed = .1;
     background(0);
     //fill(255);
+
+    var ax = map(accelerationX, -90, 90, 0, windowWidth);
+    var ay = map(accelerationY, -90, 90, 0, windowHeight);
+    ellipse(ax, ay, 30, 30); // for mobile web
+    console.log(accelerationX);
+
     translate(centreX, centreY);
 
-    fill(0, 255, 0);
-    var ax = map(accelerationX, -90, 90, -500, 500);
-    var ay = map(accelerationY, -90, 90, -500, 500);
-    ellipse(ax, ay, 30, 30); // for mobile web
 
-        
+
     for (i = 0; i < stars.length; i++)
     {
         stars[i].update();
