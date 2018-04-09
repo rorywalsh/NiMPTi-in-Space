@@ -26,9 +26,7 @@ function drawScene()
 {
     speed = .1;
     background(0);
-    fill(255)
-    stroke(255)
-    text("Score: "+String(score), 40, 40);
+
     translate(centreX, centreY);
 
     //move stars around
@@ -56,6 +54,10 @@ function drawScene()
     line(-30, 0, -10, 0);
     line(+30, 0, +10, 0);
 
+    strokeWeight(1)
+    fill(255)
+    stroke(255)
+    text("Score: "+String(score), 3, 60);
 }
 
 // This function calls the main drawing function during gameplay, or the "loading Csound"
