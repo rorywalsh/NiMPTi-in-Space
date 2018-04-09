@@ -3,7 +3,7 @@ var textAlphaSpeed = 0.01;
 var stars = [];
 var triggerStars = [];
 var centreX, centreY, mobileDevice=false, score=0;
-
+var offX = 0, offY = 0;
 
 // Setup our canvas and create our stars
 function setup()
@@ -28,6 +28,9 @@ function drawScene()
     background(0);
 
     translate(centreX, centreY);
+
+    if(mobileCheck.android)
+      rotate(PI/2);
 
     //move stars around
     for (i = 0; i < stars.length; i++)
@@ -58,6 +61,8 @@ function drawScene()
     fill(255)
     stroke(255)
     text("Score: "+String(score), 3, 60);
+    text("OffX: " +String(offX), 3, 75);
+    text("OffY: " +String(offY), 3, 90);
 }
 
 // This function calls the main drawing function during gameplay, or the "loading Csound"
@@ -97,24 +102,17 @@ function spawnRedDwarf()
 
 function keyPressed()
 {
-    if (keyCode === CONTROL)
-    {
+  if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
+      offX += 1;
 
-    }
+  if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
+      offX -= 1;
 
-    if (keyCode === 32)
-    {
-      for (i = 0; i < stars.length; i++)
-      {
-          star = stars[i];
-          if (star.name == "RedDwarf")
-          {
-              if (star.x > -5 && star.x < 5
-                  && star.y > -5 && star.y < 5)
-                  stars.splice(i, 1);
-          }
-      }
-    }
+  if (keyIsDown(UP_ARROW) || keyIsDown(87))
+      offY += 1;
+
+  if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
+      offY -= 1;
 }
 
 function mousePressed(){
