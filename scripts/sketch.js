@@ -2,8 +2,10 @@ var textAlpha = 0;
 var textAlphaSpeed = 0.01;
 var stars = [];
 var triggerStars = [];
-var centreX, centreY, mobileDevice=false, score=0;
+var centreX, centreY;
+var score = 0;
 var offX = 0, offY = 0;
+var screenTouch = false;
 
 // Setup our canvas and create our stars
 function setup()
@@ -17,6 +19,7 @@ function setup()
     var cnvs = createCanvas(windowWidth, windowHeight);
 
     cnvs.style('display', 'block');
+
     textAlign(CENTER);
     var timer = setInterval(spawnRedDwarf, 2500);
 }
@@ -29,8 +32,8 @@ function drawScene()
 
     translate(centreX, centreY);
 
-    if(mobileCheck.android)
-      rotate(PI/2);
+    if (mobileCheck.android)
+        rotate(PI / 2);
 
     //move stars around
     for (i = 0; i < stars.length; i++)
@@ -39,15 +42,15 @@ function drawScene()
     }
 
     // draw crosshair
-    if(mouseIsPressed)
+    if (mouseIsPressed || screenTouch)
     {
-      stroke(255, 255, 0);
-      strokeWeight(8);
+        stroke(255, 255, 0);
+        strokeWeight(8);
     }
     else
     {
-      stroke(255);
-      strokeWeight(4);
+        stroke(255);
+        strokeWeight(4);
     }
 
     fill(0, 0, 0, 0);
@@ -60,9 +63,9 @@ function drawScene()
     strokeWeight(1)
     fill(255)
     stroke(255)
-    text("Score: "+String(score), 3, 60);
-    text("OffX: " +String(offX), 3, 75);
-    text("OffY: " +String(offY), 3, 90);
+    text("Score: " + String(score), 3, 60);
+    text("OffX: " + String(offX), 3, 75);
+    text("OffY: " + String(offY), 3, 90);
 }
 
 // This function calls the main drawing function during gameplay, or the "loading Csound"
@@ -102,34 +105,43 @@ function spawnRedDwarf()
 
 function keyPressed()
 {
-  if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
-      offX += 1;
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
+        offX += 1;
 
-  if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
-      offX -= 1;
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
+        offX -= 1;
 
-  if (keyIsDown(UP_ARROW) || keyIsDown(87))
-      offY += 1;
+    if (keyIsDown(UP_ARROW) || keyIsDown(87))
+        offY += 1;
 
-  if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
-      offY -= 1;
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
+        offY -= 1;
 }
 
-function mousePressed(){
-  for (i = 0; i < stars.length; i++)
-  {
-      star = stars[i];
-      if (star.name == "RedDwarf")
-      {
-          if (star.x > -5 && star.x < 5
-              && star.y > -5 && star.y < 5)
-              {
+function mousePressed()
+{
+    for (i = 0; i < stars.length; i++)
+    {
+        star = stars[i];
+        if (star.name == "RedDwarf")
+        {
+            if (star.x > -5 && star.x < 5 &&
+                star.y > -5 && star.y < 5)
+            {
                 score++;
                 stars.splice(i, 1);
-              }
+            }
 
-      }
-  }
+        }
+    }
+}
+
+function touchEnded() {
+  screenTouch = false;
+}
+
+function touchStart() {
+  screenTouch = true;
 }
 
 function windowResized()
