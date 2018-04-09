@@ -26,16 +26,16 @@ function drawScene()
 {
     speed = .1;
     background(0);
-    fill(255);
+    //fill(255);
+
+    fill(0, 255, 0);
+    ellipse(map(accelerationX, -90, 90, 0, windowWidth),
+              map(accelerationY, -90, 90, 0, windowHeight), 25, 25);
+
     translate(centreX, centreY);
 
-    //if(mobileCheck.android)
-    //{
-      fill(0, 255, 0);
-      ellipse(map(accelerationX, -90, 90, -450, 450),
-              map(accelerationY, -90, 90, -450, 450), 25, 25);
-      //this.y += map(accelerationY, -90, 90, -5, 5);
-    //}
+
+
 
     for (i = 0; i < stars.length; i++)
     {
