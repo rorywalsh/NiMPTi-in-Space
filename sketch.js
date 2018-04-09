@@ -27,16 +27,7 @@ function drawScene()
     speed = .1;
     background(0);
     //fill(255);
-    fill(0, 255, 0);
-    var ax = map(accelerationX, -90, 90, 0, windowWidth);
-  	var ay = map(accelerationY, -90, 90, 0, windowHeight);
-    ellipse(ax, ay, 30, 30); // for mobile web
-
     translate(centreX, centreY);
-
-
-
-
     for (i = 0; i < stars.length; i++)
     {
         stars[i].update();
@@ -64,6 +55,10 @@ function draw()
     if (csoundLoaded)
     {
         drawScene();
+        fill(0, 255, 0);
+        var ax = map(accelerationX, -90, 90, 0, windowWidth);
+        var ay = map(accelerationY, -90, 90, 0, windowHeight);
+        ellipse(ax, ay, 30, 30); // for mobile web
     }
     else
     {
