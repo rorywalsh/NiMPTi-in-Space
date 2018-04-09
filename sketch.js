@@ -31,9 +31,7 @@ function drawScene()
 
     //if(mobileCheck.android)
     //{
-      //fill(0, 255, 0);
-      textSize(16);
-      text(accelerationX, 100, 30);
+      fill(0, 255, 0);
       ellipse(map(accelerationX, -90, 90, -450, 450),
               map(accelerationY, -90, 90, -450, 450), 25, 25);
       //this.y += map(accelerationY, -90, 90, -5, 5);
