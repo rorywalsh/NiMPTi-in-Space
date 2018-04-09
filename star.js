@@ -1,5 +1,7 @@
-class Star {
-    constructor() { // I place values in the variables
+class Star
+{
+    constructor()
+    { // I place values in the variables
         this.x = random(-windowWidth / 2, windowWidth / 2);
         this.y = random(-windowHeight / 2, windowHeight / 2);
         this.z = random(width / 2);
@@ -15,26 +17,37 @@ class Star {
         this.name = "NormalStar";
     }
 
-    update() {
+    update()
+    {
 
-        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+        if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
+        {
             this.x += 1;
             this.hDirection += .01;
         }
 
-        if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
+        {
             this.x -= 1;
             this.hDirection -= .01;
         }
 
-        if (keyIsDown(UP_ARROW) || keyIsDown(87)) {
+        if (keyIsDown(UP_ARROW) || keyIsDown(87))
+        {
             this.y += 1;
             this.vDirection += .01;
         }
 
-        if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
+        if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
+        {
             this.y -= 1;
             this.vDirection -= .01;
+        }
+
+        if (mobileCheck.android)
+        {
+            this.y += map(accelerationX, -90, 90, -5, 5);
+            this.x += map(accelerationX, -90, 90, -5, 5);
         }
 
         if (this.hDriection != 0)
@@ -43,7 +56,8 @@ class Star {
             this.y += this.vDirection;
 
         this.z = this.z - speed;
-        if (this.z < 10) {
+        if (this.z < 10)
+        {
             this.z = random(windowWidth / 2);
             this.x = random(-windowWidth / 2, windowWidth / 2);
             this.y = random(-windowHeight / 2, windowHeight / 2);
@@ -54,7 +68,8 @@ class Star {
     }
 
 
-    show() {
+    show()
+    {
         fill(this.r, this.g, this.b);
         strokeWeight(0);
         var sx = map(this.x / this.z, 0, 1, 0, windowWidth / 2);
