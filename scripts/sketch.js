@@ -64,8 +64,8 @@ function drawScene()
     fill(255)
     stroke(255)
     text("Score: " + String(score), 3, 60);
-    text("OffX: " + String(offX), 3, 75);
-    text("OffY: " + String(offY), 3, 90);
+    text("OffX: " + String(parseFloat(offX).toFixed(2)), 3, 75);
+    text("OffY: " + String(parseFloat(offY).toFixed(2)), 3, 90);
 }
 
 // This function calls the main drawing function during gameplay, or the "loading Csound"
@@ -74,10 +74,10 @@ function draw()
 {
     if (mobileCheck.android)
     {
-        offY += map(accelerationY, -90, 90, -5, 5);
-        offX += map(accelerationX, -90, 90, -5, 5);
+        offY = map(accelerationY, -90, 90, -5, 5);
+        offX = map(accelerationX, -90, 90, -5, 5);
     }
-    
+
     csoundLoaded = true;
     if (csoundLoaded)
     {
@@ -112,16 +112,16 @@ function spawnRedDwarf()
 function keyPressed()
 {
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
-        offX += 1;
+        offX += .01;
 
     if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
-        offX -= 1;
+        offX -= .01;
 
     if (keyIsDown(UP_ARROW) || keyIsDown(87))
-        offY += 1;
+        offY += .01;
 
     if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
-        offY -= 1;
+        offY -= .01;
 }
 
 function mousePressed()
