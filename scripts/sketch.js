@@ -208,6 +208,8 @@ function keyPressed()
 
 function mousePressed()
 {
+    if(gameOver)
+        gameOver = false;
     for (i = 0; i < stars.length; i++)
     {
         star = stars[i];

@@ -40,10 +40,15 @@ class Enemy
             this.vDirection -= .01;
         }
         
+        if (mobileCheck.android)
+        {
+            this.x += map(accelerationX, -90, 90, -5, 5);
+            this.y += map(accelerationY, -90, 90, -5, 5);
+        }
 
         if(this.radius<150)
         {
-            fill(255);
+            fill(0, 100, 0);
             strokeWeight(0);
             var sx = this.pos / windowWidth;//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
             var sy = this.pos / windowHeight;//map(this.pos / windowHeight, 0, 1, 0, windowHeight / 2);;
