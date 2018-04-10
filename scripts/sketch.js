@@ -32,6 +32,10 @@ function setup()
 
 function drawScene()
 {
+    
+    if (mobileCheck.android)
+        rotate(PI / 2);
+
     if(gameOver==true)
     {
         fill(150, 0, 0);
@@ -59,8 +63,6 @@ function drawScene()
         background(0);
         translate(centreX, centreY);
 
-        if (mobileCheck.android)
-            rotate(PI / 2);
 
         //move stars around ===========================
         for (i = 0; i < stars.length; i++)
@@ -81,7 +83,7 @@ function drawScene()
                 enemies.splice(i, 1);
                 impact = 1;
                 lives--;
-                if(lives == 4)
+                if(lives == 0)
                     gameOver = true;              
             }        
         }
@@ -210,6 +212,7 @@ function mousePressed()
 {
     if(gameOver)
         gameOver = false;
+
     for (i = 0; i < stars.length; i++)
     {
         star = stars[i];
