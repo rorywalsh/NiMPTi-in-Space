@@ -42,8 +42,8 @@ class Enemy
         
         if (mobileCheck.android)
         {
-            this.x += map(accelerationX, -90, 90, -5, 5);
-            this.y += map(accelerationY, -90, 90, -5, 5);
+            this.x += map(accelerationX, -90, 90, -25, 25);
+            this.y += map(accelerationY, -90, 90, -25, 25);
         }
 
         if(this.radius<150)
