@@ -99,9 +99,6 @@ function drawScene()
             strokeWeight(4);
         }
 
-        if (mobileCheck.android)
-            rotate(PI / 2);
-
         fill(0, 0, 0, 0);
 
         // set impact shake amount ======================
@@ -136,6 +133,9 @@ function draw()
     csoundLoaded = true;
     if (csoundLoaded)
     {
+        if (mobileCheck.android)
+            rotate(PI / 2);
+
         if (mobileCheck.android)
         {
             offY = map(accelerationY, -90, 90, -5, 5);
