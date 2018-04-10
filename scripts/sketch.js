@@ -33,8 +33,7 @@ function setup()
 function drawScene()
 {
     
-    if (mobileCheck.android)
-        rotate(PI / 2);
+
 
     if(gameOver==true)
     {
@@ -99,6 +98,9 @@ function drawScene()
             stroke(255);
             strokeWeight(4);
         }
+
+        if (mobileCheck.android)
+            rotate(PI / 2);
 
         fill(0, 0, 0, 0);
 
