@@ -38,8 +38,7 @@ function drawScene()
     if(gameOver==true)
     {
         fill(150, 0, 0);
-        if (mobileCheck.android)
-            rotate(PI / 2);
+
         rect(-windowWidth, -windowHeight, windowWidth*2, windowHeight*2*closingBlinds);
 
         if(closingBlinds>1)
@@ -107,12 +106,10 @@ function drawScene()
         impact = impact > 0 ? impact - .05 : 0;
         shake = random(-10, 10) * impact;
 
-        if (mobileCheck.android)
-            rotate(PI / 2);
         // draw cross-hair ===============================
         ellipse(0 + shake, 0 + shake, 50, 50);
-        line(0 + shake, -30 + shake, 0 + shake, -10+shake);
-        line(0 + shake, +30 + shake, 0 + shake, +10+shake);
+        line(0 + shake, -30 + shake, 0 + shake, -10 + shake);
+        line(0 + shake, +30 + shake, 0 + shake, +10 + shake);
         line(-30 + shake, 0 + shake, -10 + shake, 0 + shake);
         line(+30 + shake, 0 + shake, +10 + shake, 0 + shake);
         rect(-100 + shake, -100 + shake, 200, 300);
