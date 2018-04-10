@@ -6,7 +6,8 @@ var centreX, centreY;
 var score = 0;
 var offX = 0, offY = 0;
 var screenTouch = false;
-var timer = setInterval(spawnRedDwarf, 2500);;
+setTimeout(spawnRedDwarf, 2000);
+var numberOfRedStars = 0;
 
 // Setup our canvas and create our stars
 function setup()
@@ -64,8 +65,9 @@ function drawScene()
     fill(255)
     stroke(255)
     text("Score: " + String(score), 3, 60);
-    text("OffX: " + String(parseFloat(offX).toFixed(2)), 3, 75);
-    text("OffY: " + String(parseFloat(offY).toFixed(2)), 3, 90);
+    text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0, 75);
+    text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0, 90);
+    text("Red Dwarf Count: " + String(numberOfRedStars), 0, 105);
 }
 
 // This function calls the main drawing function during gameplay, or the "loading Csound"
@@ -105,8 +107,10 @@ function spawnRedDwarf()
     star.g = 0;
     star.b = 0;
     star.name = "RedDwarf";
-    clearInterval(timer);
-    setInterval(spawnRedDwarf, 10000 + random(10000));
+    star.x = random(-100, 100);
+    star.y = random(-100, 100);
+    setTimeout(spawnRedDwarf, 5000+random(10000));
+    numberOfRedStars++;
 }
 
 function keyPressed()
@@ -136,6 +140,7 @@ function mousePressed()
             {
                 score++;
                 stars.splice(i, 1);
+                numberOfRedStars--;
             }
 
         }

@@ -57,7 +57,11 @@ class Star
         if (this.vDriection != 0)
             this.y += this.vDirection;
 
-        this.z = this.z - speed;
+        if(name=="RedDwarf")
+          this.z = this.z - speed * 20;
+        else {
+          this.z = this.z - speed;
+        }
         if (this.z < 10)
         {
             this.z = random(windowWidth / 2);
@@ -76,7 +80,7 @@ class Star
         strokeWeight(0);
         var sx = map(this.x / this.z, 0, 1, 0, windowWidth / 2);
         var sy = map(this.y / this.z, 0, 1, 0, windowHeight / 2);;
-        var r = map(this.z, 0, windowWidth / 2, 40, 0);
+        var r = map(this.z, 0, windowWidth/2, 80, 0);
         ellipse(sx, sy, r, r);
         var px = map(this.x / this.pz, 0, 1, 0, windowWidth);
         var py = map(this.y / this.pz, 0, 1, 0, windowHeight);
