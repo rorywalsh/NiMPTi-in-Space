@@ -1,13 +1,15 @@
 var textAlpha = 0;
 var textAlphaSpeed = 0.01;
 var stars = [];
-var triggerStars = [];
+var enemies = [];
 var centreX, centreY;
-var score = 0;
+var score = 0, lives = 5;
 var offX = 0, offY = 0;
 var screenTouch = false;
 setTimeout(spawnRedDwarf, 2000);
+setTimeout(spawnEnemy, 2000);
 var numberOfRedStars = 0;
+var impact = 0;
 
 // Setup our canvas and create our stars
 function setup()
@@ -22,9 +24,12 @@ function setup()
     var cnvs = createCanvas(windowWidth, windowHeight);
     cnvs.style('display', 'block');
     textAlign(CENTER);
+
+    img = createImage(windowWidth, windowHeight);
+    img.loadPixels();
 }
 
-// This is the main draw loop for the game
+
 function drawScene()
 {
     speed = .1;
@@ -34,13 +39,28 @@ function drawScene()
     if (mobileCheck.android)
         rotate(PI / 2);
 
-    //move stars around
+    //move stars around ===========================
     for (i = 0; i < stars.length; i++)
     {
         stars[i].update();
     }
 
-    // draw crosshair ===============================
+    //move enemies around ==========================
+    for (i = 0; i < enemies.length; i++)
+    {
+        enemy = enemies[i];
+        enemy.update();
+        if (enemy.x > -100 && enemy.x < 100 &&
+            enemy.y > -100 && enemy.y < 100 &&
+            enemy.radius>145)
+        {
+            print("Hit");
+            enemies.splice(i, 1);
+            impact = 1;
+            lives--;
+        }        
+    }
+    
     if (mouseIsPressed || screenTouch)
     {
         stroke(255, 255, 0);
@@ -54,35 +74,42 @@ function drawScene()
     }
 
     fill(0, 0, 0, 0);
-    ellipse(0, 0, 50, 50);
-    line(0, -30, 0, -10);
-    line(0, +30, 0, +10);
-    line(-30, 0, -10, 0);
-    line(+30, 0, +10, 0);
+
+    // set impact shake amount ======================
+    impact = impact>0 ? impact-.05 : 0;
+    shake = random(-10, 10)*impact;
+
+    // draw crosshair ===============================
+    ellipse(0+shake, 0+shake, 50, 50);
+    line(0+shake, -30+shake, 0+shake, -10+shake);
+    line(0+shake, +30+shake, 0+shake, +10+shake);
+    line(-30+shake, 0+shake, -10+shake, 0+shake);
+    line(+30+shake, 0+shake, +10+shake, 0+shake);
+    rect(-100+shake, -100+shake, 200, 300);
 
     // draw on-screen text =========================
-    strokeWeight(1)
-    fill(255)
-    stroke(255)
-    text("Score: " + String(score), 3, 60);
-    text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0, 75);
-    text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0, 90);
-    text("Red Dwarf Count: " + String(numberOfRedStars), 0, 105);
+    strokeWeight(1);
+    fill(255);
+    stroke(255);
+    text("Score: " + String(score), 3+shake, 60+shake);
+    text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0+shake, 75+shake);
+    text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0+shake, 90+shake);
+    text("Red Dwarf Count: " + String(numberOfRedStars), 0+shake, 105+shake);
+    text("Lives Remaining: " + String(lives), 0+shake, 120+shake);
 }
 
 // This function calls the main drawing function during gameplay, or the "loading Csound"
 // message when the Csound object is loading
 function draw()
 {
-    if (mobileCheck.android)
-    {
-        offY = map(accelerationY, -90, 90, -5, 5);
-        offX = map(accelerationX, -90, 90, -5, 5);
-    }
-
     csoundLoaded = true;
     if (csoundLoaded)
     {
+        if (mobileCheck.android)
+        {
+            offY = map(accelerationY, -90, 90, -5, 5);
+            offX = map(accelerationX, -90, 90, -5, 5);
+        }
         drawScene();
     }
     else
@@ -111,6 +138,15 @@ function spawnRedDwarf()
     star.y = random(-100, 100);
     setTimeout(spawnRedDwarf, 5000+random(10000));
     numberOfRedStars++;
+}
+
+function spawnEnemy()
+{
+    enemies.push(new Enemy());
+    enemy = enemies[enemies.length - 1];
+    enemy.x = random(-100, 100);
+    enemy.y = random(-100, 100);
+    setTimeout(spawnEnemy, 5000+random(10000));
 }
 
 function keyPressed()
