@@ -52,10 +52,10 @@ class Star
             this.hDirection = map(accelerationX, -90, 90, -1, 1);
         }
 
-        if (this.hDirection != 0)
-            this.x += this.hDirection;
-        if (this.vDirection != 0)
-            this.y += this.vDirection;
+        // if (this.hDirection != 0)
+        //     this.x += this.hDirection;
+        // if (this.vDirection != 0)
+        //     this.y += this.vDirection;
 
         if(name=="RedDwarf")
           this.z = this.z - speed * 20;
