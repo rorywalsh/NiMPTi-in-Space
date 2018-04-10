@@ -3,13 +3,15 @@ var textAlphaSpeed = 0.01;
 var stars = [];
 var enemies = [];
 var centreX, centreY;
-var score = 0, lives = 5;
+var score = 0, lives = 5, gameOver = false;
+var closingBlinds = 0;
 var offX = 0, offY = 0;
 var screenTouch = false;
 setTimeout(spawnRedDwarf, 2000);
 setTimeout(spawnEnemy, 2000);
 var numberOfRedStars = 0;
 var impact = 0;
+
 
 // Setup our canvas and create our stars
 function setup()
@@ -21,81 +23,106 @@ function setup()
 
     centreX = windowWidth / 2;
     centreY = windowHeight / 2;
-    var cnvs = createCanvas(windowWidth, windowHeight);
-    cnvs.style('display', 'block');
+    var cans = createCanvas(windowWidth, windowHeight);
+    cans.style('display', 'block');
     textAlign(CENTER);
 
-    img = createImage(windowWidth, windowHeight);
-    img.loadPixels();
 }
 
 
 function drawScene()
 {
-    speed = .1;
-    background(0);
-    translate(centreX, centreY);
-
-    if (mobileCheck.android)
-        rotate(PI / 2);
-
-    //move stars around ===========================
-    for (i = 0; i < stars.length; i++)
+    if(gameOver==true)
     {
-        stars[i].update();
-    }
+        fill(150, 0, 0);
+        rect(-windowWidth, -windowHeight, windowWidth*2, windowHeight*2*closingBlinds);
 
-    //move enemies around ==========================
-    for (i = 0; i < enemies.length; i++)
-    {
-        enemy = enemies[i];
-        enemy.update();
-        if (enemy.x > -100 && enemy.x < 100 &&
-            enemy.y > -100 && enemy.y < 100 &&
-            enemy.radius>145)
-        {
-            print("Hit");
-            enemies.splice(i, 1);
-            impact = 1;
-            lives--;
-        }        
-    }
-    
-    if (mouseIsPressed || screenTouch)
-    {
-        stroke(255, 255, 0);
-        strokeWeight(8);
-        screenTouch = false;
+        if(closingBlinds>1)
+        {            
+            fill(255)
+            stroke(255)
+            textSize(80);
+            text("Game Over", windowWidth/2, windowHeight/2);
+            textSize(25)
+            text("Tap screen/mouse to start again",  windowWidth/2, windowHeight/2 + 50);
+            fill(150, 0, 0);
+            resetLevel();
+            if(mouseIsPressed)
+                gameOver=false;
+        }
+
+        closingBlinds+=0.1;
     }
     else
     {
+        speed = .1;
+        background(0);
+        translate(centreX, centreY);
+
+        if (mobileCheck.android)
+            rotate(PI / 2);
+
+        //move stars around ===========================
+        for (i = 0; i < stars.length; i++)
+        {
+            stars[i].update();
+        }
+
+        //move enemies around ==========================
+        for (i = 0; i < enemies.length; i++)
+        {
+            enemy = enemies[i];
+            enemy.update();
+            if (enemy.x > -100 && enemy.x < 100 &&
+                enemy.y > -100 && enemy.y < 100 &&
+                enemy.radius>145)
+            {
+                print("Hit");
+                enemies.splice(i, 1);
+                impact = 1;
+                lives--;
+                if(lives == 4)
+                    gameOver = true;              
+            }        
+        }
+        
+        if (mouseIsPressed || screenTouch)
+        {
+            stroke(255, 255, 0);
+            strokeWeight(8);
+            screenTouch = false;
+        }
+        else
+        {
+            stroke(255);
+            strokeWeight(4);
+        }
+
+        fill(0, 0, 0, 0);
+
+        // set impact shake amount ======================
+        impact = impact > 0 ? impact - .05 : 0;
+        shake = random(-10, 10) * impact;
+
+        // draw cross-hair ===============================
+        ellipse(0 + shake, 0 + shake, 50, 50);
+        line(0 + shake, -30 + shake, 0 + shake, -10+shake);
+        line(0 + shake, +30 + shake, 0 + shake, +10+shake);
+        line(-30 + shake, 0 + shake, -10 + shake, 0 + shake);
+        line(+30 + shake, 0 + shake, +10 + shake, 0 + shake);
+        rect(-100 + shake, -100 + shake, 200, 300);
+    
+        // draw on-screen text =========================
+        strokeWeight(1);
+        fill(255);
         stroke(255);
-        strokeWeight(4);
-    }
+        text("Score: " + String(score), 3 + shake, 60 + shake);
+        text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75 + shake);
+        text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90 + shake);
+        text("Red Dwarf Count: " + String(numberOfRedStars), 0 + shake, 105 + shake);
+        text("Lives Remaining: " + String(lives), 0 + shake, 120 + shake);
+    }   
 
-    fill(0, 0, 0, 0);
-
-    // set impact shake amount ======================
-    impact = impact>0 ? impact-.05 : 0;
-    shake = random(-10, 10)*impact;
-
-    // draw crosshair ===============================
-    ellipse(0+shake, 0+shake, 50, 50);
-    line(0+shake, -30+shake, 0+shake, -10+shake);
-    line(0+shake, +30+shake, 0+shake, +10+shake);
-    line(-30+shake, 0+shake, -10+shake, 0+shake);
-    line(+30+shake, 0+shake, +10+shake, 0+shake);
-    rect(-100+shake, -100+shake, 200, 300);
-
-    // draw on-screen text =========================
-    strokeWeight(1);
-    fill(255);
-    stroke(255);
-    text("Score: " + String(score), 3+shake, 60+shake);
-    text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0+shake, 75+shake);
-    text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0+shake, 90+shake);
-    text("Red Dwarf Count: " + String(numberOfRedStars), 0+shake, 105+shake);
-    text("Lives Remaining: " + String(lives), 0+shake, 120+shake);
 }
 
 // This function calls the main drawing function during gameplay, or the "loading Csound"
@@ -123,6 +150,21 @@ function draw()
         {
             textAlphaSpeed *= -1;
         }
+    }
+}
+
+function resetLevel()
+{
+    numberOfRedStars = 0;
+    lives = 5;
+    offX = 0;
+    offY = 0;
+
+    for (i = 0; i < stars.length; i++)
+    {
+        star = stars[i];
+        star.vDirection = 0;
+        star.hDirection = 0;
     }
 }
 

@@ -43,7 +43,7 @@ class Enemy
 
         if(this.radius<150)
         {
-            fill(255, 255,0);
+            fill(255);
             strokeWeight(0);
             var sx = this.pos / windowWidth;//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
             var sy = this.pos / windowHeight;//map(this.pos / windowHeight, 0, 1, 0, windowHeight / 2);;
