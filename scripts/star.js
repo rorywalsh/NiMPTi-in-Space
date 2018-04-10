@@ -46,15 +46,15 @@ class Star
 
         if (mobileCheck.android)
         {
-            this.x += map(accelerationY, -90, 90, -5, 5);
-            this.y += map(accelerationX, -90, 90, -5, 5);
+            this.y += map(accelerationY, -90, 90, -5, 5);
+            this.x += map(accelerationX, -90, 90, -5, 5);
             this.vDirection = map(accelerationY, -90, 90, -1, 1);
             this.hDirection = map(accelerationX, -90, 90, -1, 1);
         }
 
-        // if (this.hDirection != 0)
+        // if (this.hDriection != 0)
         //     this.x += this.hDirection;
-        // if (this.vDirection != 0)
+        // if (this.vDriection != 0)
         //     this.y += this.vDirection;
 
         if(name=="RedDwarf")
