@@ -48,18 +48,19 @@ class Enemy
 
         if(this.radius<150)
         {
-            fill(0, 100, 0);
+            fill(this.colour);
             strokeWeight(0);
-            var sx = this.pos / windowWidth;//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
-            var sy = this.pos / windowHeight;//map(this.pos / windowHeight, 0, 1, 0, windowHeight / 2);;
-            this.radius = exp(this.pos*.1);
-            
-            ellipse(sx+this.x+sin(this.angle)*10, sy+this.y+cos(this.angle)*10, this.radius, this.radius);
-            //var px = map(this.pos / windowWidth, 0, 1, 0, windowWidth);
-            //var py = map(this.pos / windowWidth, 0, 1, 0, windowHeight);
-            //this.pz = this.z;
-            this.pos++;
-            this.angle++;
+            this.x = this.x + this.pos / windowWidth +sin(this.angle)*20*(this.radius/150);//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
+            this.y = this.y + this.pos / windowHeight +cos(this.angle)*20*(this.radius/150);//map(this.pos / windowHeight, 0, 1, 0, windowHeight / 2);;
+            this.radius = exp(this.pos*.1);            
+            ellipse(this.x, this.y, this.radius, this.radius);
+            this.pos+=.25;
+            this.angle+=(this.radius+1)/50;
+        }
+        else
+        {
+            this.x = -10000;
+            this.y = -10000;
         }
 
         

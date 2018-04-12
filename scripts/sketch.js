@@ -7,11 +7,15 @@ var score = 0, lives = 5, gameOver = false;
 var closingBlinds = 0;
 var offX = 0, offY = 0;
 var screenTouch = false;
-setTimeout(spawnRedDwarf, 2000);
-setTimeout(spawnEnemy, 2000);
+setTimeout(spawnFriendlyPlanet, 2000);
+setTimeout(spawnHostilePlanet, 2000);
 var numberOfRedStars = 0;
 var impact = 0;
 
+
+// Shooting a red plant will increase the volume of track 1
+// Letting a red incoming wobbly plant hit you will decrese the volume of that track. 
+// Same logic applied to all colour plants, but you mst mantain a positive live count or it's game over. 
 
 // Setup our canvas and create our stars
 function setup()
@@ -67,7 +71,17 @@ function drawScene()
         //move stars around ===========================
         for (i = 0; i < stars.length; i++)
         {
-            stars[i].update();
+            star = stars[i];
+            if(star.name.includes("Red"))
+            {
+                //push();
+                //translate(star.x, star.y);
+                //rotate(frameCount/50);
+                star.update();
+                //pop();
+            }
+            else
+            star.update();
         }
 
         //move enemies around ==========================
@@ -83,6 +97,8 @@ function drawScene()
                 enemies.splice(i, 1);
                 impact = 1;
                 lives--;
+                score--;
+                cs.setControlChannel("voice2vol", score*.05);
                 if(lives == 0)
                     gameOver = true;              
             }        
@@ -131,7 +147,6 @@ function drawScene()
 // message when the Csound object is loading
 function draw()
 {
-    csoundLoaded = true;
     if (csoundLoaded)
     {
 
@@ -171,27 +186,30 @@ function resetLevel()
     }
 }
 
-function spawnRedDwarf()
+function spawnFriendlyPlanet()
 {
+    
     stars.push(new Star());
     star = stars[stars.length - 1];
-    star.r = 255;
-    star.g = 0;
-    star.b = 0;
-    star.name = "RedDwarf";
+    star.colour = color(200, 0, 0);
+    //if(random()>.8)
+    //    star.name = "RedDwarfTableChange"
+    //else
+        star.name = "RedDwarfVolumeUp";
+        star.shouldRotate = true;
     star.x = random(-100, 100);
     star.y = random(-100, 100);
-    setTimeout(spawnRedDwarf, 5000+random(10000));
+    setTimeout(spawnFriendlyPlanet, 5000+random(10000));
     numberOfRedStars++;
 }
 
-function spawnEnemy()
+function spawnHostilePlanet()
 {
     enemies.push(new Enemy());
     enemy = enemies[enemies.length - 1];
     enemy.x = random(-100, 100);
     enemy.y = random(-100, 100);
-    setTimeout(spawnEnemy, 5000+random(10000));
+    setTimeout(spawnHostilePlanet, 5000+random(10000));
 }
 
 function keyPressed()
@@ -214,17 +232,25 @@ function mousePressed()
     if(gameOver)
         gameOver = false;
 
+    cs.readScore('i"Explosion" 0 1')
+
     for (i = 0; i < stars.length; i++)
     {
         star = stars[i];
-        if (star.name == "RedDwarf")
+        if (star.name.includes("RedDwarf"))
         {
             if (star.x > -5 && star.x < 5 &&
                 star.y > -5 && star.y < 5)
             {
-                score++;
-                stars.splice(i, 1);
-                numberOfRedStars--;
+                if(star.name == "RedDwarfVolumeUp")
+                {
+                    score++;
+                    cs.setControlChannel("voice2vol", score*.05);
+                    stars.splice(i, 1);
+                    numberOfRedStars--;
+                    cs.setControlChannel("triggerChange", random(100));
+                }
+
             }
 
         }
@@ -232,7 +258,8 @@ function mousePressed()
 }
 
 
-function touchStart() {
+function touchStart() 
+{
   screenTouch = true;
 }
 

@@ -14,17 +14,38 @@ var cs;
 // Called when Csound WASM completes loading
 function onRuntimeInitialized()
 {
-    // cs = new CsoundObj();
-    //
-    // //use this code to load a .csd file and have Csound compile and start it
-    // var fileManger = new FileManager(['csd'], console.log);
-    // fileManger.fileUploadFromServer("random.csd", function(){
-    //   cs.compileCSD("random.csd");
-    //   cs.start();
-    //   cs.audioContext.resume();
-    // });
-    //
-    // csoundLoaded = true;
+    cs = new CsoundObj();
+    
+    //use this code to load a .csd file and have Csound compile and start it
+    var fileManger = new FileManager(['csd'], console.log);
+    fileManger.fileUploadFromServer("NiMPTi65.csd", function(){
+      cs.compileCSD("NiMPTi65.csd");
+      cs.start();
+      cs.setControlChannel("drumVol", 1);
+      cs.setControlChannel("voice1vol", .10);
+      cs.setControlChannel("voice2vol", 0);  
+      cs.setControlChannel("voice3vol", 0);  
+      cs.setControlChannel("voice4vol", 0); 
+      cs.setControlChannel("voice5vol", 0);  
+      cs.setControlChannel("voice1table", 1);
+      cs.setControlChannel("voice2table", 1);
+      cs.setControlChannel("voice3table", 1);
+      cs.setControlChannel("voice4table", 1);
+      cs.setControlChannel("voice5table", 1);
+      cs.setControlChannel("voice1bit", 8);  
+      cs.setControlChannel("voice2bit", 8);  
+      cs.setControlChannel("voice3bit", 8);  
+      cs.setControlChannel("voice4bit", 8);  
+      cs.setControlChannel("voice5bit", 8);  
+      cs.setControlChannel("voice1fold", 10);
+      cs.setControlChannel("voice2fold", 10);
+      cs.setControlChannel("voice3fold", 10);
+      cs.setControlChannel("voice4fold", 10);
+      cs.setControlChannel("voice5fold", 10);
+      cs.audioContext.resume();
+    });
+    
+    csoundLoaded = true;
 
 }
 
