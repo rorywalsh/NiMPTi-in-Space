@@ -24,6 +24,7 @@ groupbox bounds(404, 14, 94, 150), text("Track 5"), colour("aqua") fontcolour(0,
 rslider bounds(416, 44, 70, 70), channel("voice5vol"),  textcolour(0,0,0)   trackercolour(:white)  range(0, 1, 0), text("Volume")
 button bounds(422, 120, 60, 30), channel("voice5change"),  text("Shuffle")
 
+button bounds(112, 178, 80, 40), channel("fire"), text("Fire Missile")
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
@@ -147,21 +148,46 @@ endin
 ;---------------------------------------------
 instr 3
     if changed(chnget:k("voice1change"))==1 then
-        event "i", 4, 0, 1, 99
+        event "i", "ShuffleNotes", 0, 1, 99
         printks "Hello", 0
     elseif changed(chnget:k("voice2change"))==1 then
-        event "i", 4, 0, 1, 98
+        event "i", "ShuffleNotes", 0, 1, 98
     elseif changed(chnget:k("voice3change"))==1 then
-        event "i", 4, 0, 1, 97
+        event "i", "ShuffleNotes", 0, 1, 97
     elseif changed(chnget:k("voice4change"))==1 then
-        event "i", 4, 0, 1, 95
+        event "i", "ShuffleNotes", 0, 1, 95
     elseif changed(chnget:k("voice5change"))==1 then
-        event "i", 4, 0, 1, 96
+        event "i", "ShuffleNotes", 0, 1, 96
     endif
 endin
 
-instr 4
+instr ShuffleNotes
 	TableShuffle p4
+endin
+
+;-----------------------------------------------
+; really simple synth - voiced five times 
+; with different notes/timbres
+;-----------------------------------------------    
+instr 4
+    if changed:k(chnget:k("fire"))==1 then
+        event "i", "Fire", 0, 1
+        event "i", "Explosion", .5, 1
+    endif
+endin
+
+instr Explosion
+    a1 randi 1, 1500
+    a3 oscil 1, 100, -1
+    a2 expon .05, p3, .001
+    outs a2*a1*a3, a2*a1*a3
+endin
+
+instr Fire
+    a1 expon 500, p3, 0.001 
+    a2 oscili 10, a1, -1
+    aclip clip a2*a1, 2, .3
+    outs aclip*.05, aclip*.05
 endin
 ;---------------------------------------------
 ; extremly simple set of drums
@@ -227,24 +253,7 @@ instr Synth
     outs (a1*.25)*kGain, (a1*.25)*kGain
 endin
 
-;-----------------------------------------------
-; really simple synth - voiced five times 
-; with different notes/timbres
-;-----------------------------------------------    
-instr Explosion
-    a1 randi 1, 1500
-    a3 oscil 1, 100, -1
-    a2 expon .05, p3, .001
-    outs a2*a1*a3, a2*a1*a3
-endin
-
-instr Fire
-    a1 expon 500, p3, 0.001 
-    a2 oscili 1, a1, -1
-    aclip clip a2*a1, 2, .05
-    outs aclip*.05, aclip*.05
-endin
-
+;-------------------------------------------------------------------------------
 instr 20000
 ;a1, a2 monitor
 ;fout "/Users/walshr/sourcecode/CsoundUnity/Examples/SimpleDemoOSX3/Assets/Scripts/output.wav", 4, a1
@@ -252,7 +261,7 @@ endin
 
 </CsInstruments>
 <CsScore>
-f0 [3600*99]
+f0 z
 f2 0 8 10 1 1
 f3 0 1024 10 1 1
 f1 0 4096 7 0.001 96 1 4000 0.001
@@ -261,9 +270,10 @@ f98 0 16 -2 7.00 7.04 7.05 7.04 0 0 0 7.04 7.05 7.00 5 5 7.00 7.07 7.05 7.05 0 0
 f97 0 16 -2 7.00 7.04 7.05 7.04 0 0 0 7.04 7.05 7.00 5 5 7.00 7.07 7.05 7.05 0 0
 f96 0 16 -2 7.00 7.04 7.05 7.04 0 0 0 7.04 7.05 7.00 5 5 7.00 7.07 7.05 7.05 0 0
 f95 0 8 -2 0 0 7.0 6.09 7.09 8 8.07 0 0 7.0 6.09 7.09 8 8.07 0 0 7.0 6.09 7.09 8 8.07 0 
-i20000 0 1000
+i20000 0 z
 i2 0 .1
 i3 0 z
+i4 0 z
 ;i"Fire" 0 1
 i"Drums"	0	3600
 ;i"Explosion" 0 1

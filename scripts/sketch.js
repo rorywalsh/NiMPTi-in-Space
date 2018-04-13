@@ -2,6 +2,7 @@ var textAlpha = 0;
 var textAlphaSpeed = 0.01;
 var stars = [];
 var enemies = [];
+var backgroundStars = [];
 var centreX, centreY;
 var score = 0, lives = 5, gameOver = false;
 var redLevel = 0, greenLevel = 0, aquaLevel = 0, pinkLevel = 0, yellowLevel = 0;
@@ -22,9 +23,10 @@ var impact = 0;
 function setup()
 {
     for (i = 0; i < 100; i++)
-    {
         stars.push(new Star("RegularStar"));
-    }
+
+    for (i = 0; i < 100; i++)
+        backgroundStars.push(new BackgroundStar());
 
     centreX = windowWidth / 2;
     centreY = windowHeight / 2;
@@ -43,8 +45,8 @@ function drawScene()
 
         if(closingBlinds>1)
         {            
-            fill(255)
-            stroke(255)
+            fill(255);
+            stroke(255);
             textSize(80);
             text("Game Over", windowWidth/2, windowHeight/2);
             textSize(25)
@@ -62,11 +64,23 @@ function drawScene()
     {
         speed = .1;
         background(0);
+
+         //update stars 
+         for (i = 0; i < backgroundStars.length; i++)
+         {
+             bgStar = backgroundStars[i];
+             bgStar.update();
+         }
+
         translate(centreX, centreY);
 
+
+                   
+        
         //update stars 
         for (i = 0; i < stars.length; i++)
         {
+            
             star = stars[i];
             if(star.name.includes("Track"))
             {
@@ -89,24 +103,20 @@ function drawScene()
         for (i = 0; i < enemies.length; i++)
         {
             enemy = enemies[i];
-            push();
-            translate(enemy.x, enemy.y);
-            rotate(frameCount/10);
-            translate(-enemy.x, -enemy.y);
+           // push();
+            //translate(enemy.x, enemy.y);
+            //rotate(sin(frameCount*.01));
+            //translate(-enemy.x, -enemy.y);
             enemy.update();
-            pop();
-
+           // pop();
             
             if (enemy.x > -100 && enemy.x < 100 &&
                 enemy.y > -100 && enemy.y < 100 &&
                 enemy.radius>145)
             {
-                print("Hit");
                 enemies.splice(i, 1);
                 impact = 1;
                 lives--;
-                score--;
-                cs.setControlChannel("voice2vol", score*.05);
                 if(lives == 0)
                     gameOver = true;              
             }        
@@ -251,7 +261,8 @@ function spawnHostileStar()
     enemy = enemies[enemies.length - 1];
     enemy.x = random(-100, 100);
     enemy.y = random(-100, 100);
-    enemy.colour = color(0, 100, 0);
+    enemy.bottomColour = color(0, 100, 0);
+    enemy.topColour = color(100, 50, 0);
     setTimeout(spawnHostileStar, 5000+random(10000));
 }
 
@@ -268,6 +279,28 @@ function keyPressed()
 
     if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
         offY -= .01;
+
+    if (keyCode === 49) {
+        cs.setControlChannel("voice1change", random(100));
+    } else if (keyCode === 50) {
+        cs.setControlChannel("voice2change", random(100));
+    } else if (keyCode === 51) {
+        cs.setControlChannel("voice3change", random(100));
+    } else if (keyCode === 52) {
+        cs.setControlChannel("voice4change", random(100));
+    } else if (keyCode === 53) {
+        cs.setControlChannel("voice5change", random(100));
+    } else if (keyCode === 81) {
+        cs.setControlChannel("voice1vol", .2);
+    } else if (keyCode === 87) {
+        cs.setControlChannel("voice2vol", .2);
+    } else if (keyCode === 69) {
+        cs.setControlChannel("voice3vol", .2);
+    } else if (keyCode === 81) {
+        cs.setControlChannel("voice4vol", .2);
+    } else if (keyCode === 84) {
+        cs.setControlChannel("voice5vol", .2);
+    }
 }
 
 function mousePressed()
@@ -393,18 +426,3 @@ function windowResized()
 {
     resizeCanvas(windowWidth, windowHeight);
 }
-
-function keyPressed() {
-    if (keyCode === 49) {
-        cs.setControlChannel("voice1change", random(100));
-    } else if (keyCode === 50) {
-        cs.setControlChannel("voice2change", random(100));
-    } else if (keyCode === 51) {
-        cs.setControlChannel("voice3change", random(100));
-    } else if (keyCode === 52) {
-        cs.setControlChannel("voice4change", random(100));
-    } else if (keyCode === 53) {
-        cs.setControlChannel("voice5change", random(100));
-    }
-  }
-

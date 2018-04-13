@@ -48,14 +48,17 @@ class Enemy
 
         if(this.radius<150)
         {
-            fill(this.colour);
+            
             strokeWeight(0);
             this.x = this.x + this.pos / windowWidth +sin(this.angle)*20*(this.radius/150);//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
             this.y = this.y + this.pos / windowHeight +cos(this.angle)*20*(this.radius/150);//map(this.pos / windowHeight, 0, 1, 0, windowHeight / 2);;
             this.radius = exp(this.pos*.1);            
-            this.star(this.x, this.y, this.radius*.6, this.radius, 3.75);
+            fill(this.topColour);
+            arc(this.x, this.y, this.radius*.5, this.radius*.5, -PI, 0); 
+            fill(this.bottomColour);
+            ellipse(this.x, this.y+this.radius*.1, this.radius, this.radius*.5);
             this.pos+=.25;
-            this.angle+=(this.radius+1)/50;
+            this.angle+=(this.radius+1)/150;
         }
         else
         {
@@ -64,20 +67,5 @@ class Enemy
         }        
     }
 
-    star(x, y, radius1, radius2, npoints) 
-    {
-        var angle = TWO_PI / npoints;
-        var halfAngle = angle/2.0;
-        beginShape();
-        for (var a = 0; a < TWO_PI; a += angle) {
-          var sx = x + cos(a) * radius2;
-          var sy = y + sin(a) * radius2;
-          vertex(sx, sy);
-          sx = x + cos(a+halfAngle) * radius1;
-          sy = y + sin(a+halfAngle) * radius1;
-          vertex(sx, sy);
-        }
-        endShape(CLOSE);
-    }
 
 }

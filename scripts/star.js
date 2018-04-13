@@ -9,6 +9,8 @@ class Star
         else
             this.distance = 1000;
 
+        print(windowHeight);
+
         var starBrightness = random(100);
         this.colour = color(starBrightness, starBrightness, starBrightness)
         this.xPos = 0;
@@ -71,18 +73,22 @@ class Star
         }
 
         if(star.name == "RegularStar")
+        {
             this.distance = this.distance-2;
+            var r = map(this.distance, 0, windowWidth/2, 120, 0);
+        }
         else
-            this.distance = this.distance-1; 
+        {
+            this.distance -= 1; 
+            var r = 50*(1-(this.distance/1000));
+        }
+            
 
         fill(this.colour);
         strokeWeight(0);
 
         var sx = map(this.x/this.distance, 0, 1, 0, windowWidth / 2);
         var sy = map(this.y/this.distance, 0, 1, 0, windowHeight / 2);
-
-        //as distance moves from far to near, out planets should get bigger
-        var r = map(this.distance, 0, windowWidth/2, 120, 0);
 
         if(this.name == "RegularStar")
             ellipse(sx, sy, r, r);
