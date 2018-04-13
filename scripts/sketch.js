@@ -276,42 +276,67 @@ function mousePressed()
         gameOver = false;
 
     cs.readScore('i"Fire" 0 1')
-    //cs.readScore('i"Explosion" .4 1')
 
     for (i = 0; i < stars.length; i++)
     {
         star = stars[i];
         if (star.name.includes("Track"))
         {
-            if (star.x > -5 && star.x < 5 &&
-                star.y > -5 && star.y < 5)
+            if (star.x > -10 && star.x < 10 &&
+                star.y > -10 && star.y < 10)
             {
                 if(star.name.includes("VolumeUp"))
                 {
                     if(star.name.includes("Red"))
                     {
-                        redLevel = constrain(redLevel+=0.05, 0, .5);
-                        cs.setControlChannel("voice1vol", redLevel);
+                        if(keyIsDown(32))
+                            cs.setControlChannel("voice1change", random(100));
+                        else
+                        {
+                            redLevel = constrain(redLevel+=0.05, 0, .5);
+                            cs.setControlChannel("voice1vol", redLevel);
+                        }
+                        
                     }
                     else if(star.name.includes("Green"))
                     {
-                        greenLevel = constrain(greenLevel+=0.05, 0, .5);
-                        cs.setControlChannel("voice2vol", greenLevel);
+                        if(keyIsDown(32))
+                           cs.setControlChannel("voice2change", random(100));
+                        else
+                        {
+                            greenLevel = constrain(greenLevel+=0.05, 0, .5);
+                            cs.setControlChannel("voice2vol", greenLevel);
+                        }
                     }
                     else if(star.name.includes("Yellow"))
                     {
-                        yellowLevel = constrain(yellowLevel+=0.05, 0, .5);
-                        cs.setControlChannel("voice3vol", yellowLevel);
+                        if(keyIsDown(32))
+                            cs.setControlChannel("voice3change", random(100));
+                        else
+                        {
+                            yellowLevel = constrain(yellowLevel+=0.05, 0, .5);
+                            cs.setControlChannel("voice3vol", yellowLevel);
+                        }
                     }
                     else if(star.name.includes("Aqua"))
                     {
-                        aquaLevel = constrain(aquaLevel+=0.05, 0, .5);
-                        cs.setControlChannel("voice4vol", aquaLevel);
+                        if(keyIsDown(32))
+                            cs.setControlChannel("voice4change", random(100));
+                        else
+                        {
+                            aquaLevel = constrain(aquaLevel+=0.05, 0, .5);
+                            cs.setControlChannel("voice4vol", aquaLevel);
+                        }
                     }
                     else if(star.name.includes("Pink"))
                     {
-                        pinkLevel = constrain(pinkLevel+=0.05, 0, .5);
-                        cs.setControlChannel("voice5vol", pinkLevel);
+                        if(keyIsDown(32))
+                            cs.setControlChannel("voice5change", random(100));
+                        else
+                        {
+                            pinkLevel = constrain(pinkLevel+=0.05, 0, .5);
+                            cs.setControlChannel("voice5vol", pinkLevel);
+                        }
                     }
                     //trigger drum pattern change each time you turn up the volume
                     cs.setControlChannel("triggerChange", random(100));
@@ -345,13 +370,19 @@ function mousePressed()
                     }
                 }
 
-                stars.splice(i, 1);
+                //stars.splice(i, 1);
+                setTimeout(destroyStar, 250, i);
             }
 
         }
     }
 }
 
+function destroyStar(index)
+{
+    cs.readScore('i"Explosion" 0 1')
+    stars.splice(index, 1);
+}
 
 function touchStart() 
 {
@@ -362,3 +393,18 @@ function windowResized()
 {
     resizeCanvas(windowWidth, windowHeight);
 }
+
+function keyPressed() {
+    if (keyCode === 49) {
+        cs.setControlChannel("voice1change", random(100));
+    } else if (keyCode === 50) {
+        cs.setControlChannel("voice2change", random(100));
+    } else if (keyCode === 51) {
+        cs.setControlChannel("voice3change", random(100));
+    } else if (keyCode === 52) {
+        cs.setControlChannel("voice4change", random(100));
+    } else if (keyCode === 53) {
+        cs.setControlChannel("voice5change", random(100));
+    }
+  }
+
