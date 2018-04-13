@@ -128,8 +128,12 @@ endin
 ;really simple background synth
 instr Synth
 	a1 init 0
+	kGain init 0
 	Schannel sprintf "voice%dvol", p6
 	kGain chnget Schannel
+
+	kGain port kGain, 3
+
 	;kGain=1
 	kNote oscil 1, 1/p4, p5
 	if p8==1 then

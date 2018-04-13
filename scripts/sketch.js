@@ -4,11 +4,12 @@ var stars = [];
 var enemies = [];
 var centreX, centreY;
 var score = 0, lives = 5, gameOver = false;
+var redLevel = 0, greenLevel = 0, aquaLevel = 0, pinkLevel = 0, yellowLevel = 0;
 var closingBlinds = 0;
 var offX = 0, offY = 0;
 var screenTouch = false;
-setTimeout(spawnFriendlyPlanet, 2000);
-setTimeout(spawnHostilePlanet, 2000);
+setTimeout(spawnFriendlyStar, 2000);
+setTimeout(spawnHostileStar, 2000);
 var numberOfRedStars = 0;
 var impact = 0;
 
@@ -20,9 +21,9 @@ var impact = 0;
 // Setup our canvas and create our stars
 function setup()
 {
-    for (i = 0; i < 800; i++)
+    for (i = 0; i < 100; i++)
     {
-        stars.push(new Star());
+        stars.push(new Star("RegularStar"));
     }
 
     centreX = windowWidth / 2;
@@ -30,19 +31,14 @@ function setup()
     var cans = createCanvas(windowWidth, windowHeight);
     cans.style('display', 'block');
     textAlign(CENTER);
-
 }
 
 
 function drawScene()
 {
-    
-
-
     if(gameOver==true)
     {
         fill(150, 0, 0);
-
         rect(-windowWidth, -windowHeight, windowWidth*2, windowHeight*2*closingBlinds);
 
         if(closingBlinds>1)
@@ -55,6 +51,7 @@ function drawScene()
             text("Tap screen/mouse to start again",  windowWidth/2, windowHeight/2 + 50);
             fill(150, 0, 0);
             resetLevel();
+
             if(mouseIsPressed)
                 gameOver=false;
         }
@@ -67,28 +64,39 @@ function drawScene()
         background(0);
         translate(centreX, centreY);
 
-
-        //move stars around ===========================
+        //update stars 
         for (i = 0; i < stars.length; i++)
         {
             star = stars[i];
-            if(star.name.includes("Red"))
+            if(star.name.includes("Track"))
             {
-                //push();
-                //translate(star.x, star.y);
-                //rotate(frameCount/50);
+                push();
+                translate(star.x, star.y);
+                if(star.name.includes("VolumeUp"))
+                    rotate(frameCount/10);
+                else if(star.name.includes("VolumeDown"))
+                    rotate(-frameCount/10);
+
+                translate(-star.x, -star.y);
                 star.update();
-                //pop();
+                pop();
             }
             else
             star.update();
         }
 
-        //move enemies around ==========================
+        //update enemies
         for (i = 0; i < enemies.length; i++)
         {
             enemy = enemies[i];
+            push();
+            translate(enemy.x, enemy.y);
+            rotate(frameCount/10);
+            translate(-enemy.x, -enemy.y);
             enemy.update();
+            pop();
+
+            
             if (enemy.x > -100 && enemy.x < 100 &&
                 enemy.y > -100 && enemy.y < 100 &&
                 enemy.radius>145)
@@ -128,17 +136,35 @@ function drawScene()
         line(0 + shake, +30 + shake, 0 + shake, +10 + shake);
         line(-30 + shake, 0 + shake, -10 + shake, 0 + shake);
         line(+30 + shake, 0 + shake, +10 + shake, 0 + shake);
-        rect(-100 + shake, -100 + shake, 200, 300);
+        rect(-100 + shake, -100 + shake, 200, 260);
     
         // draw on-screen text =========================
         strokeWeight(1);
         fill(255);
         stroke(255);
-        text("Score: " + String(score), 3 + shake, 60 + shake);
+        text("Lives Remaining: " + String(lives), 3 + shake, 60 + shake);
         text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75 + shake);
         text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90 + shake);
-        text("Red Dwarf Count: " + String(numberOfRedStars), 0 + shake, 105 + shake);
-        text("Lives Remaining: " + String(lives), 0 + shake, 120 + shake);
+        
+        strokeWeight(0);
+        fill(color(255, 0, 0))
+        rect(-80, 140-redLevel*100, 20, 2+redLevel*100);
+ 
+        strokeWeight(0);
+        fill(color(0, 255, 0))
+        rect(-45, 140-greenLevel*100, 20, 2+greenLevel*100);
+
+        strokeWeight(0);
+        fill(color(255, 0, 255))
+        rect(-10, 140-pinkLevel*100, 20, 2+pinkLevel*100);
+
+        strokeWeight(0);
+        fill(color(255, 255, 0))
+        rect(25, 140-yellowLevel*100, 20, 2+yellowLevel*100);
+
+        strokeWeight(0);
+        fill(color(0, 255, 255))
+        rect(60, 140-aquaLevel*100, 20, 2+aquaLevel*100);
     }   
 
 }
@@ -186,30 +212,47 @@ function resetLevel()
     }
 }
 
-function spawnFriendlyPlanet()
+function spawnFriendlyStar()
 {
-    
-    stars.push(new Star());
+    //use simple weighting to determine colour
+    var starType = random(100);
+    if(starType<20)
+        createStar("RedTrack", color(255, 0, 0));
+    else if(starType>=20 && starType<40)
+        createStar("GreenTrack", color(0, 255, 0));
+    else if(starType>=40 && starType<60)
+        createStar("PinkTrack", color(255, 0, 255));
+    else if(starType>=60 && starType<80)
+        createStar("YellowTrack", color(255, 255, 0));
+    else if(starType>=80 && starType<100)
+        createStar("AquaTrack", color(0, 255, 255));
+
     star = stars[stars.length - 1];
-    star.colour = color(200, 0, 0);
-    //if(random()>.8)
-    //    star.name = "RedDwarfTableChange"
-    //else
-        star.name = "RedDwarfVolumeUp";
-        star.shouldRotate = true;
     star.x = random(-100, 100);
     star.y = random(-100, 100);
-    setTimeout(spawnFriendlyPlanet, 5000+random(10000));
-    numberOfRedStars++;
+    setTimeout(spawnFriendlyStar, 5000+random(10000));
+    
 }
 
-function spawnHostilePlanet()
+function createStar(type, colour)
+{
+    print(type+"VolumeUp");
+    if(random()<.5)
+        stars.push(new Star(type+"VolumeUp"));
+    else
+        stars.push(new Star(type+"VolumeDown"));
+
+    stars[stars.length - 1].colour = colour;
+}
+
+function spawnHostileStar()
 {
     enemies.push(new Enemy());
     enemy = enemies[enemies.length - 1];
     enemy.x = random(-100, 100);
     enemy.y = random(-100, 100);
-    setTimeout(spawnHostilePlanet, 5000+random(10000));
+    enemy.colour = color(0, 100, 0);
+    setTimeout(spawnHostileStar, 5000+random(10000));
 }
 
 function keyPressed()
@@ -232,25 +275,77 @@ function mousePressed()
     if(gameOver)
         gameOver = false;
 
-    cs.readScore('i"Explosion" 0 1')
+    cs.readScore('i"Fire" 0 1')
+    //cs.readScore('i"Explosion" .4 1')
 
     for (i = 0; i < stars.length; i++)
     {
         star = stars[i];
-        if (star.name.includes("RedDwarf"))
+        if (star.name.includes("Track"))
         {
             if (star.x > -5 && star.x < 5 &&
                 star.y > -5 && star.y < 5)
             {
-                if(star.name == "RedDwarfVolumeUp")
+                if(star.name.includes("VolumeUp"))
                 {
-                    score++;
-                    cs.setControlChannel("voice2vol", score*.05);
-                    stars.splice(i, 1);
-                    numberOfRedStars--;
+                    if(star.name.includes("Red"))
+                    {
+                        redLevel = constrain(redLevel+=0.05, 0, .5);
+                        cs.setControlChannel("voice1vol", redLevel);
+                    }
+                    else if(star.name.includes("Green"))
+                    {
+                        greenLevel = constrain(greenLevel+=0.05, 0, .5);
+                        cs.setControlChannel("voice2vol", greenLevel);
+                    }
+                    else if(star.name.includes("Yellow"))
+                    {
+                        yellowLevel = constrain(yellowLevel+=0.05, 0, .5);
+                        cs.setControlChannel("voice3vol", yellowLevel);
+                    }
+                    else if(star.name.includes("Aqua"))
+                    {
+                        aquaLevel = constrain(aquaLevel+=0.05, 0, .5);
+                        cs.setControlChannel("voice4vol", aquaLevel);
+                    }
+                    else if(star.name.includes("Pink"))
+                    {
+                        pinkLevel = constrain(pinkLevel+=0.05, 0, .5);
+                        cs.setControlChannel("voice5vol", pinkLevel);
+                    }
+                    //trigger drum pattern change each time you turn up the volume
                     cs.setControlChannel("triggerChange", random(100));
                 }
+                else if(star.name.includes("VolumeDown"))
+                {
+                    if(star.name.includes("Red"))
+                    {
+                        redLevel = constrain(redLevel-=0.05, 0, .5);
+                        cs.setControlChannel("voice1vol", redLevel);
+                    }
+                    else if(star.name.includes("Green"))
+                    {
+                        greenLevel = constrain(greenLevel-=0.05, 0, .5);
+                        cs.setControlChannel("voice2vol", greenLevel);
+                    }
+                    else if(star.name.includes("Yellow"))
+                    {
+                        yellowLevel = constrain(yellowLevel-=0.05, 0, .5);
+                        cs.setControlChannel("voice3vol", yellowLevel);
+                    }
+                    else if(star.name.includes("Aqua"))
+                    {
+                        aquaLevel = constrain(aquaLevel-=0.05, 0, .5);
+                        cs.setControlChannel("voice4vol", aquaLevel);
+                    }
+                    else if(star.name.includes("Pink"))
+                    {
+                        pinkLevel = constrain(pinkLevel-=0.05, 0, .5);
+                        cs.setControlChannel("voice5vol", pinkLevel);
+                    }
+                }
 
+                stars.splice(i, 1);
             }
 
         }

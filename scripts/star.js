@@ -1,26 +1,27 @@
 class Star
 {
-    constructor()
-    { // I place values in the variables
+    constructor(starName)
+    { 
         this.x = random(-windowWidth / 2, windowWidth / 2);
         this.y = random(-windowHeight / 2, windowHeight / 2);
-        this.z = random(width / 2);
-        this.pz = this.z;
+        if(starName == "RegularStar")
+            this.distance = windowHeight/2+random(windowHeight);
+        else
+            this.distance = 1000;
+
         var starBrightness = random(100);
         this.colour = color(starBrightness, starBrightness, starBrightness)
-
         this.xPos = 0;
         this.yPos = 0;
         this.released = 10;
         this.hDirection = 0;
         this.vDirection = 0;
         this.shouldRotate = false;
-        this.name = "NormalStar";
+        this.name = starName;
     }
 
     update()
     {
-
         if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
         {
             this.x += 1;
@@ -58,42 +59,39 @@ class Star
         if (this.vDirection != 0)
             this.y += this.vDirection;
 
-        if(this.name=="RedDwarfVolumeUp")
-          this.z = this.z - speed * 10;
-        else {
-          this.z = this.z - speed;
-        }
-        if (this.z < 10)
+        if (this.distance < 50)
         {
-            this.z = random(windowWidth / 2);
+            if(star.name == "RegularStar")
+                this.distance = random(windowHeight);
+            else
+                this.distance = 1000;
+
             this.x = random(-windowWidth / 2, windowWidth / 2);
             this.y = random(-windowHeight / 2, windowHeight / 2);
-            this.pz = this.z;
         }
 
-        this.show();
-    }
+        if(star.name == "RegularStar")
+            this.distance = this.distance-2;
+        else
+            this.distance = this.distance-1; 
 
-
-    show()
-    {     
         fill(this.colour);
         strokeWeight(0);
 
-        var sx = map(this.x / this.z, 0, 1, 0, windowWidth / 2);
-        var sy = map(this.y / this.z, 0, 1, 0, windowHeight / 2);
-        var r = map(this.z, 0, windowWidth/2, 80, 0);
+        var sx = map(this.x/this.distance, 0, 1, 0, windowWidth / 2);
+        var sy = map(this.y/this.distance, 0, 1, 0, windowHeight / 2);
 
-        if(!this.name.includes("RedDwarf"))
+        //as distance moves from far to near, out planets should get bigger
+        var r = map(this.distance, 0, windowWidth/2, 120, 0);
+
+        if(this.name == "RegularStar")
             ellipse(sx, sy, r, r);
         else
             this.star(sx, sy, r, r*.8, 3); 
-        var px = map(this.x / this.pz, 0, 1, 0, windowWidth);
-        var py = map(this.y / this.pz, 0, 1, 0, windowHeight);
-        this.pz = this.z;
+
     }
     
-    star(x, y, radius1, radius2, npoints) {
+    star(x, y, radius1, radius2, npoints, phase) {
         var angle = TWO_PI / npoints;
         var halfAngle = angle/2.0;
         beginShape();
