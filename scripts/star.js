@@ -9,8 +9,6 @@ class Star
         else
             this.distance = 1000;
 
-        print(windowHeight);
-
         var starBrightness = random(100);
         this.colour = color(starBrightness, starBrightness, starBrightness)
         this.xPos = 0;

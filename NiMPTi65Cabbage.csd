@@ -25,6 +25,7 @@ rslider bounds(416, 44, 70, 70), channel("voice5vol"),  textcolour(0,0,0)   trac
 button bounds(422, 120, 60, 30), channel("voice5change"),  text("Shuffle")
 
 button bounds(112, 178, 80, 40), channel("fire"), text("Fire Missile")
+button bounds(112, 224, 80, 40), channel("shuffleAll"), text("Shuffle All")
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>

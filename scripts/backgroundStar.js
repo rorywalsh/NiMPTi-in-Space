@@ -32,7 +32,6 @@ class BackgroundStar
 
         if(frameCount % this.refresh== 0)
         {
-            print("reappear");
             this.y = this.y-random(windowHeight/2);
             this.x = this.x-random(windowWidth/2);
         }    

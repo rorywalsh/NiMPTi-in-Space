@@ -290,15 +290,15 @@ function keyPressed()
         cs.setControlChannel("voice4change", random(100));
     } else if (keyCode === 53) {
         cs.setControlChannel("voice5change", random(100));
-    } else if (keyCode === 81) {
+    } else if (keyCode === 54) {
         cs.setControlChannel("voice1vol", .2);
-    } else if (keyCode === 87) {
+    } else if (keyCode === 55) {
         cs.setControlChannel("voice2vol", .2);
-    } else if (keyCode === 69) {
+    } else if (keyCode === 56) {
         cs.setControlChannel("voice3vol", .2);
-    } else if (keyCode === 81) {
+    } else if (keyCode === 57) {
         cs.setControlChannel("voice4vol", .2);
-    } else if (keyCode === 84) {
+    } else if (keyCode === 48) {
         cs.setControlChannel("voice5vol", .2);
     }
 }
