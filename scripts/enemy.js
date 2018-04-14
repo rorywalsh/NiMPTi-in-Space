@@ -11,6 +11,8 @@ class Enemy
         this.radius = 0;
         this.angle = random(.5);
         this.exitTrajectory = 2+random(20);
+        this.keyDown = false;
+        this.speedIncrease = 1;
     }
 
     update()
@@ -19,25 +21,25 @@ class Enemy
 
         if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
         {
-            this.x += 5;
+            this.x += 5*this.speedIncrease;
             this.hDirection += .01;
         }
 
         if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
         {
-            this.x -= 5;
+            this.x -= 5*this.speedIncrease;
             this.hDirection -= .01;
         }
 
         if (keyIsDown(UP_ARROW) || keyIsDown(87))
         {
-            this.y += 5;
+            this.y += 5*this.speedIncrease;
             this.vDirection += .01;
         }
 
         if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
         {
-            this.y -= 5;
+            this.y -= 5*this.speedIncrease;
             this.vDirection -= .01;
         }
         
@@ -46,7 +48,13 @@ class Enemy
             this.x += map(accelerationX, -90, 90, -25, 25);
             this.y += map(accelerationY, -90, 90, -25, 25);
         }
-strokeWeight(0);
+
+        if(this.keyDown)
+            this.speedIncrease++;
+
+
+        strokeWeight(0);
+
         if(this.radius<150)
         {
             this.x = this.x + this.pos / windowWidth +sin(this.angle)*20*(this.radius/150);//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
@@ -68,6 +76,15 @@ strokeWeight(0);
         this.pos+=.25;
         this.angle+=(this.radius+1)/150;      
     }
+}
 
+function keyPressed()
+{
+    this.keyDown = true;
+}
 
+function keyReleased() 
+{
+    this.keyDown = false;
+    this.speedIncrease = 0;
 }

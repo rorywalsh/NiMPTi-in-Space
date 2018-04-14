@@ -166,11 +166,25 @@ instr ShuffleNotes
 	TableShuffle p4
 endin
 
+;---------------------------------------------
+; updates contents of note tables and creates new melodies
+;---------------------------------------------
+instr 4
+    if changed:k(chnget:k("shuffleAll")) == 1 then
+        event "i", "ShuffleNotes", 0, 1, 99
+        event "i", "ShuffleNotes", 0, 1, 98
+        event "i", "ShuffleNotes", 0, 1, 97
+        event "i", "ShuffleNotes", 0, 1, 96
+        event "i", "ShuffleNotes", 0, 1, 95
+        event "i", 2, 0, 0.01
+    endif
+endin
+
 ;-----------------------------------------------
 ; really simple synth - voiced five times 
 ; with different notes/timbres
 ;-----------------------------------------------    
-instr 4
+instr 5
     if changed:k(chnget:k("fire"))==1 then
         event "i", "Fire", 0, 1
         event "i", "Explosion", .5, 1
@@ -275,6 +289,7 @@ i20000 0 z
 i2 0 .1
 i3 0 z
 i4 0 z
+i5 0 z
 ;i"Fire" 0 1
 i"Drums"	0	3600
 ;i"Explosion" 0 1

@@ -246,7 +246,6 @@ function spawnFriendlyStar()
 
 function createStar(type, colour)
 {
-    print(type+"VolumeUp");
     if(random()<.5)
         stars.push(new Star(type+"VolumeUp"));
     else
@@ -259,11 +258,11 @@ function spawnHostileStar()
 {
     enemies.push(new Enemy());
     enemy = enemies[enemies.length - 1];
-    enemy.x = random(-100, 100);
-    enemy.y = random(-100, 100);
+    enemy.x = random(-300, 300);
+    enemy.y = random(-300, 300);
     enemy.bottomColour = color(0, 100, 0);
     enemy.topColour = color(100, 50, 0);
-    setTimeout(spawnHostileStar, 5000+random(10000));
+    setTimeout(spawnHostileStar, 5000+random(5000));
 }
 
 function keyPressed()
@@ -302,6 +301,7 @@ function keyPressed()
         cs.setControlChannel("voice5vol", .2);
     }
 }
+
 
 function mousePressed()
 {
@@ -404,17 +404,33 @@ function mousePressed()
                 }
 
                 //stars.splice(i, 1);
-                setTimeout(destroyStar, 250, i);
+                setTimeout(destroyStar, 250, i, "MusicalStar");
             }
 
         }
     }
+    for( i = 0 ; i < enemies.length ; i++)
+    {
+        enemy = enemies[i];
+        if (enemy.x > -20 && enemy.x < 20 &&
+            enemy.y > -20 && enemy.y < 20)
+            {  
+                //stars.splice(i, 1);
+                setTimeout(destroyStar, 250, i, "Enemy");                
+            }
+    }
 }
 
-function destroyStar(index)
+function destroyStar(index, type)
 {
     cs.readScore('i"Explosion" 0 1')
-    stars.splice(index, 1);
+    if(type == "MusicalStar") 
+        stars.splice(index, 1);
+    else if(type == "Enemy")
+    {
+        enemies.splice(index, 1);
+        cs.setControlChannel('shuffleAll', random(100));
+    }
 }
 
 function touchStart() 
