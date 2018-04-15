@@ -4,7 +4,7 @@ var stars = [];
 var enemies = [];
 var backgroundStars = [];
 var centreX, centreY;
-var score = 0, lives = 5, gameOver = false, score = 0;
+var score = 0, lives = 5, gameOver = false, score = 0, enemiesKilled = 0;
 var trackOne = 0, trackTwo = 0, trackThree = 0, trackFour = 0, trackFive = 0;
 var closingBlinds = 0;
 var offX = 0, offY = 0;
@@ -14,6 +14,7 @@ setTimeout(spawnHostileStar, 2000);
 var numberOfRedStars = 0;
 var impact = 0;
 var showExplosion = 100;
+var movedLeft = 0, movedRight = 0;
 
 // Shooting a red plant will increase the volume of track 1
 // Letting a red incoming wobbly plant hit you will decrese the volume of that track. 
@@ -68,8 +69,8 @@ function drawScene()
 {
     if(gameOver==true)
     {
-        fill(150, 0, 0);
-        rect(-windowWidth, -windowHeight, windowWidth*2, windowHeight*2*closingBlinds);
+        fill(0, 0, 0, 100);
+        //rect(-windowWidth, -windowHeight, windowWidth*2, windowHeight*2*closingBlinds);
 
         if(closingBlinds>1)
         {            
@@ -79,7 +80,6 @@ function drawScene()
             text("Game Over", windowWidth/2, windowHeight/2);
             textSize(25)
             text("Tap screen/mouse to start again",  windowWidth/2, windowHeight/2 + 50);
-            fill(150, 0, 0);
             resetLevel();
 
             if(mouseIsPressed)
@@ -124,25 +124,22 @@ function drawScene()
             star.update();
         }
 
-        //update enemies
+        // update enemies
         for (i = 0; i < enemies.length; i++)
         {
             enemy = enemies[i];
-           // push();
-            //translate(enemy.x, enemy.y);
-            //rotate(sin(frameCount*.01));
-            //translate(-enemy.x, -enemy.y);
             enemy.update();
-           // pop();
             
             if (enemy.x > -100 && enemy.x < 100 &&
                 enemy.y > -100 && enemy.y < 100 &&
                 enemy.radius>145)
             {
+                // if enemy moves in front of player
+                // remove it from list
                 enemies.splice(i, 1);
                 impact = 1;
                 lives--;
-                if(lives < 0)
+                if(lives == 0)
                     gameOver = true;              
             }        
         }
@@ -170,10 +167,18 @@ function drawScene()
             angleMode(DEGREES);
             translate(0,0);
             if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) 
-                rotate(-4);
+            {
+                rotate(constrain(movedLeft, -4, 0));
+                movedLeft+=-.1;
+            }
+                
                
             if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
-                rotate(4);               
+            {
+                rotate(constrain(movedRight, 0, 4));
+                movedRight+=.1;
+            }
+              
                 
             ellipse(0 + shake, 0 + shake, 50, 50);
             line(0 + shake, -30 + shake, 0 + shake, -10 + shake);
@@ -279,7 +284,7 @@ function spawnHostileStar()
     enemy.y = random(-300, 300);
     enemy.bottomColour = color(72, 112, 85);
     enemy.topColour = color(154, 137, 86);
-    setTimeout(spawnHostileStar, map(score, 0, 30, 5000, 0)+random(2000));
+    setTimeout(spawnHostileStar, map(score, 0, 100, 5000, 0)+random(2000));
 }
 
 function createStar(type, colour)
@@ -303,12 +308,13 @@ function destroyStar(index, type)
     else if(type == "Enemy")
     {
         enemies.splice(index, 1);
-        if(score>36)
+        if(score>36 && enemiesKilled%5 == 0 )
         {
             voice = int(random(1, 5));
             cs.setControlChannel('voice'+String(voice)+'change', random(100));
+            print("Changing " +'voice'+String(voice)+'change');
         }
-            
+        enemiesKilled++;    
         score++;
     }
 
@@ -316,11 +322,11 @@ function destroyStar(index, type)
         cs.setControlChannel("voice1vol", .2);
     if(score == 6)
         cs.setControlChannel("voice2vol", .2);
-    if(score == 16)
+    if(score == 12)
         cs.setControlChannel("voice3vol", .2);
-    if(score == 24)
+    if(score == 18)
         cs.setControlChannel("voice4vol", .2);
-    if(score == 32)
+    if(score == 24)
         cs.setControlChannel("voice5vol", .2);
 
     showExplosion = 0;
@@ -343,29 +349,34 @@ function keyPressed()
     if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
         offY -= .01;
 
-    // if (keyCode === 49) {
-    //     cs.setControlChannel("voice1change", random(100));
-    // } else if (keyCode === 50) {
-    //     cs.setControlChannel("voice2change", random(100));
-    // } else if (keyCode === 51) {
-    //     cs.setControlChannel("voice3change", random(100));
-    // } else if (keyCode === 52) {
-    //     cs.setControlChannel("voice4change", random(100));
-    // } else if (keyCode === 53) {
-    //     cs.setControlChannel("voice5change", random(100));
-    // } else if (keyCode === 54) {
-    //     cs.setControlChannel("voice1vol", .2);
-    // } else if (keyCode === 55) {
-    //     cs.setControlChannel("voice2vol", .2);
-    // } else if (keyCode === 56) {
-    //     cs.setControlChannel("voice3vol", .2);
-    // } else if (keyCode === 57) {
-    //     cs.setControlChannel("voice4vol", .2);
-    // } else if (keyCode === 48) {
-    //     cs.setControlChannel("voice5vol", .2);
-    // }
+    if (keyCode === 49) {
+        cs.setControlChannel("voice1change", random(100));
+    } else if (keyCode === 50) {
+        cs.setControlChannel("voice2change", random(100));
+    } else if (keyCode === 51) {
+        cs.setControlChannel("voice3change", random(100));
+    } else if (keyCode === 52) {
+        cs.setControlChannel("voice4change", random(100));
+    } else if (keyCode === 53) {
+        cs.setControlChannel("voice5change", random(100));
+    } else if (keyCode === 54) {
+        cs.setControlChannel("voice1vol", .2);
+    } else if (keyCode === 55) {
+        cs.setControlChannel("voice2vol", .2);
+    } else if (keyCode === 56) {
+        cs.setControlChannel("voice3vol", .2);
+    } else if (keyCode === 57) {
+        cs.setControlChannel("voice4vol", .2);
+    } else if (keyCode === 48) {
+        cs.setControlChannel("voice5vol", .2);
+    }
 }
 
+function keyReleased()
+{
+    movedLeft = 0;
+    moveRight = 0;
+}
 function mousePressed()
 {
     if(gameOver)
@@ -381,93 +392,8 @@ function mousePressed()
             if (star.x > -10 && star.x < 10 &&
                 star.y > -10 && star.y < 10)
             {
-                // if(star.name.includes("VolumeUp"))
-                // {
-                //     if(star.name.includes("One"))
-                //     {
-                //         if(keyIsDown(32))
-                //             cs.setControlChannel("voice1change", random(100));
-                //         else
-                //         {
-                //             trackOne = constrain(trackOne+=0.05, 0, .5);
-                //             cs.setControlChannel("voice1vol", trackOne);
-                //         }
-                        
-                //     }
-                //     else if(star.name.includes("Two"))
-                //     {
-                //         if(keyIsDown(32))
-                //            cs.setControlChannel("voice2change", random(100));
-                //         else
-                //         {
-                //             trackTwo = constrain(trackTwo+=0.05, 0, .5);
-                //             cs.setControlChannel("voice2vol", trackTwo);
-                //         }
-                //     }
-                //     else if(star.name.includes("Three"))
-                //     {
-                //         if(keyIsDown(32))
-                //             cs.setControlChannel("voice3change", random(100));
-                //         else
-                //         {
-                //             trackFive = constrain(trackFive+=0.05, 0, .5);
-                //             cs.setControlChannel("voice3vol", trackFive);
-                //         }
-                //     }
-                //     else if(star.name.includes("Four"))
-                //     {
-                //         if(keyIsDown(32))
-                //             cs.setControlChannel("voice4change", random(100));
-                //         else
-                //         {
-                //             trackThree = constrain(trackThree+=0.05, 0, .5);
-                //             cs.setControlChannel("voice4vol", trackThree);
-                //         }
-                //     }
-                //     else if(star.name.includes("Five"))
-                //     {
-                //         if(keyIsDown(32))
-                //             cs.setControlChannel("voice5change", random(100));
-                //         else
-                //         {
-                //             trackFour = constrain(trackFour+=0.05, 0, .5);
-                //             cs.setControlChannel("voice5vol", trackFour);
-                //         }
-                //     }
-                //     //trigger drum pattern change each time you turn up the volume
-                //     cs.setControlChannel("triggerChange", random(100));
-                // }
-                // else if(star.name.includes("VolumeDown"))
-                // {
-                //     if(star.name.includes("One"))
-                //     {
-                //         trackOne = constrain(trackOne-=0.05, 0, .5);
-                //         cs.setControlChannel("voice1vol", trackOne);
-                //     }
-                //     else if(star.name.includes("Two"))
-                //     {
-                //         trackTwo = constrain(trackTwo-=0.05, 0, .5);
-                //         cs.setControlChannel("voice2vol", trackTwo);
-                //     }
-                //     else if(star.name.includes("Three"))
-                //     {
-                //         trackFive = constrain(trackFive-=0.05, 0, .5);
-                //         cs.setControlChannel("voice3vol", trackFive);
-                //     }
-                //     else if(star.name.includes("Four"))
-                //     {
-                //         trackThree = constrain(trackThree-=0.05, 0, .5);
-                //         cs.setControlChannel("voice4vol", trackThree);
-                //     }
-                //     else if(star.name.includes("Five"))
-                //     {
-                //         trackFour = constrain(trackFour-=0.05, 0, .5);
-                //         cs.setControlChannel("voice5vol", trackFour);
-                //     }
-                // }
-
-                //stars.splice(i, 1);
-                cs.setControlChannel("triggerChange", random(100));
+                if((score+1)%10 == 0)
+                    cs.setControlChannel("drumChange", random(100));
                 setTimeout(destroyStar, 250, i, "MusicalStar");
             }
 
@@ -476,10 +402,9 @@ function mousePressed()
     for( i = 0 ; i < enemies.length ; i++)
     {
         enemy = enemies[i];
-        if (enemy.x > -20 && enemy.x < 20 &&
-            enemy.y > -20 && enemy.y < 20)
+        if (enemy.x+enemy.radius > -20 && enemy.x-enemy.radius < 20 &&
+            enemy.y+enemy.radius > -20 && enemy.y-enemy.radius < 20)
             {  
-                //stars.splice(i, 1);
                 setTimeout(destroyStar, 250, i, "Enemy");                
             }
     }

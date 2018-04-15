@@ -18,6 +18,7 @@ class Star
         this.vDirection = 0;
         this.shouldRotate = false;
         this.name = starName;
+        this.radius = 0;
     }
 
     update()
@@ -73,12 +74,12 @@ class Star
         if(star.name == "RegularStar")
         {
             this.distance = this.distance-2;
-            var r = map(this.distance, 0, windowWidth/2, 120, 0);
+            this.radius = map(this.distance, 0, windowWidth/2, 120, 0);
         }
         else
         {
             this.distance -= 1; 
-            var r = 50*(1-(this.distance/1000));
+            this.radius = 50*(1-(this.distance/1000));
         }
             
 
@@ -89,9 +90,9 @@ class Star
         var sy = map(this.y/this.distance, 0, 1, 0, windowHeight / 2);
 
         if(this.name == "RegularStar")
-            ellipse(sx, sy, r, r);
+            ellipse(sx, sy, this.radius, this.radius);
         else
-            this.star(sx, sy, r, r*.8, 3); 
+            this.star(sx, sy, this.radius, this.radius*.8, 3); 
 
     }
     

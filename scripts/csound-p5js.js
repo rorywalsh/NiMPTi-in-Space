@@ -22,7 +22,7 @@ function onRuntimeInitialized()
       cs.compileCSD("NiMPTi65.csd");
       cs.start();
       cs.setControlChannel("drumVol", 1);
-      cs.setControlChannel("voice1vol", 0);
+      cs.setControlChannel("voice1vol", 0.2);
       cs.setControlChannel("voice2vol", 0);  
       cs.setControlChannel("voice3vol", 0);  
       cs.setControlChannel("voice4vol", 0); 
