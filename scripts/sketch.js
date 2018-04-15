@@ -4,8 +4,8 @@ var stars = [];
 var enemies = [];
 var backgroundStars = [];
 var centreX, centreY;
-var score = 0, lives = 5, gameOver = false;
-var redLevel = 0, greenLevel = 0, aquaLevel = 0, pinkLevel = 0, yellowLevel = 0;
+var score = 0, lives = 5, gameOver = false, score = 0;
+var trackOne = 0, trackTwo = 0, trackThree = 0, trackFour = 0, trackFive = 0;
 var closingBlinds = 0;
 var offX = 0, offY = 0;
 var screenTouch = false;
@@ -101,14 +101,11 @@ function drawScene()
          }
 
         translate(centreX, centreY);
-
-
                    
         
         //update stars 
         for (i = 0; i < stars.length; i++)
-        {
-            
+        {            
             star = stars[i];
             if(star.name.includes("Track"))
             {
@@ -145,14 +142,14 @@ function drawScene()
                 enemies.splice(i, 1);
                 impact = 1;
                 lives--;
-                if(lives == 0)
+                if(lives < 0)
                     gameOver = true;              
             }        
         }
         
         if (mouseIsPressed || screenTouch)
         {
-            stroke(255, 255, 0);
+            stroke(100, 100, 100);
             strokeWeight(8);
             screenTouch = false;
         }
@@ -169,60 +166,52 @@ function drawScene()
         shake = random(-10, 10) * impact;
 
         // draw cross-hair ===============================
-        ellipse(0 + shake, 0 + shake, 50, 50);
-        line(0 + shake, -30 + shake, 0 + shake, -10 + shake);
-        line(0 + shake, +30 + shake, 0 + shake, +10 + shake);
-        line(-30 + shake, 0 + shake, -10 + shake, 0 + shake);
-        line(+30 + shake, 0 + shake, +10 + shake, 0 + shake);
-        rect(-100 + shake, -100 + shake, 200, 260);
-    
-        // draw on-screen text =========================
-        strokeWeight(1);
-        fill(255);
-        stroke(255);
-        text("Lives Remaining: " + String(lives), 3 + shake, 60 + shake);
-        text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75 + shake);
-        text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90 + shake);
-        
+        push();
+            angleMode(DEGREES);
+            translate(0,0);
+            if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) 
+                rotate(-4);
+               
+            if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
+                rotate(4);               
+                
+            ellipse(0 + shake, 0 + shake, 50, 50);
+            line(0 + shake, -30 + shake, 0 + shake, -10 + shake);
+            line(0 + shake, +30 + shake, 0 + shake, +10 + shake);
+            line(-30 + shake, 0 + shake, -10 + shake, 0 + shake);
+            line(+30 + shake, 0 + shake, +10 + shake, 0 + shake);
+            rect(-100 + shake, -100 + shake, 200, 260);
+            // draw on-screen text =========================
+            strokeWeight(1);
+            fill(255);
+            stroke(255);
+            text("Lives Remaining: " + String(lives), 3 + shake, 60 + shake);
+            text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75 + shake);
+            text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90 + shake);
+            text("Score: " + String(score), 3 + shake, 105 + shake);
+            translate(0,0)
+            angleMode(RADIANS);
+        pop();
+
         if(showExplosion<50)
         {
             value = 1-exp(showExplosion/50);
             if(showExplosion%2 == 0)
-                fill(255, 0, 0);
+                fill(255, 255, 255);
             else
-                fill(255, 255, 0);
+                fill(0, 0, 0);
 
             push();
-            translate(0, 0);            
-            rotate(frameCount);
-            explosion(0-value*20, 0-value*20, value*20, 5, 6);
-            explosion(0-value*20+random(-4, 4), 0-value*20+random(-4, 4), value*20, 5, 6);
-            rotate(-frameCount);
-            explosion(0-value*20+random(-2, 2), 0-value*20+random(-2, 2), value*20, 5, 6);
-            translate(0,0);
+                translate(0, 0);            
+                rotate(frameCount);
+                explosion(0-value*20, 0-value*20, value*30, value*10, 6);
+                explosion(0-value*20+random(-4, 4), 0-value*20+random(-4, 4), value*20, 5, 6);
+                explosion(0-value*20+random(-2, 2), 0-value*20+random(-2, 2), value*20, 10, 6);
+                explosion(0-value*20+random(-2, 2), 0-value*20+random(-2, 2), value*20, 10, 6);
+                translate(0,0);
             pop();
             showExplosion+=5;
         }
-
-        strokeWeight(0);
-        fill(color(255, 0, 0))
-        rect(-80, 140-redLevel*100, 20, 2+redLevel*100);
- 
-        strokeWeight(0);
-        fill(color(0, 255, 0))
-        rect(-45, 140-greenLevel*100, 20, 2+greenLevel*100);
-
-        strokeWeight(0);
-        fill(color(255, 0, 255))
-        rect(-10, 140-pinkLevel*100, 20, 2+pinkLevel*100);
-
-        strokeWeight(0);
-        fill(color(255, 255, 0))
-        rect(25, 140-yellowLevel*100, 20, 2+yellowLevel*100);
-
-        strokeWeight(0);
-        fill(color(0, 255, 255))
-        rect(60, 140-aquaLevel*100, 20, 2+aquaLevel*100);
     }   
 
 }
@@ -266,20 +255,20 @@ function spawnFriendlyStar()
     //use simple weighting to determine colour
     var starType = random(100);
     if(starType<20)
-        createStar("RedTrack", color(255, 0, 0));
+        createStar("TrackOne", color(209, 206, 165));
     else if(starType>=20 && starType<40)
-        createStar("GreenTrack", color(0, 255, 0));
+        createStar("TrackTwo", color(198, 172, 69));
     else if(starType>=40 && starType<60)
-        createStar("PinkTrack", color(255, 0, 255));
+        createStar("TrackThree", color(144, 158, 46));
     else if(starType>=60 && starType<80)
-        createStar("YellowTrack", color(255, 255, 0));
+        createStar("TrackFour", color(104, 142, 147));
     else if(starType>=80 && starType<100)
-        createStar("AquaTrack", color(0, 255, 255));
+        createStar("TrackFive", color(124, 191, 190));
 
     star = stars[stars.length - 1];
     star.x = random(-100, 100);
     star.y = random(-100, 100);
-    setTimeout(spawnFriendlyStar, 5000+random(10000));    
+    setTimeout(spawnFriendlyStar, 5000+random(2000));    
 }
 
 function spawnHostileStar()
@@ -288,9 +277,9 @@ function spawnHostileStar()
     enemy = enemies[enemies.length - 1];
     enemy.x = random(-300, 300);
     enemy.y = random(-300, 300);
-    enemy.bottomColour = color(0, 100, 0);
-    enemy.topColour = color(100, 50, 0);
-    setTimeout(spawnHostileStar, 5000+random(5000));
+    enemy.bottomColour = color(72, 112, 85);
+    enemy.topColour = color(154, 137, 86);
+    setTimeout(spawnHostileStar, map(score, 0, 30, 5000, 0)+random(2000));
 }
 
 function createStar(type, colour)
@@ -307,12 +296,33 @@ function destroyStar(index, type)
 {
     cs.readScore('i"Explosion" 0 1')
     if(type == "MusicalStar") 
+    {
         stars.splice(index, 1);
+        score++;
+    }
     else if(type == "Enemy")
     {
         enemies.splice(index, 1);
-        cs.setControlChannel('shuffleAll', random(100));
+        if(score>36)
+        {
+            voice = int(random(1, 5));
+            cs.setControlChannel('voice'+String(voice)+'change', random(100));
+        }
+            
+        score++;
     }
+
+    if(score == 2)
+        cs.setControlChannel("voice1vol", .2);
+    if(score == 6)
+        cs.setControlChannel("voice2vol", .2);
+    if(score == 16)
+        cs.setControlChannel("voice3vol", .2);
+    if(score == 24)
+        cs.setControlChannel("voice4vol", .2);
+    if(score == 32)
+        cs.setControlChannel("voice5vol", .2);
+
     showExplosion = 0;
 }
 
@@ -333,27 +343,27 @@ function keyPressed()
     if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
         offY -= .01;
 
-    if (keyCode === 49) {
-        cs.setControlChannel("voice1change", random(100));
-    } else if (keyCode === 50) {
-        cs.setControlChannel("voice2change", random(100));
-    } else if (keyCode === 51) {
-        cs.setControlChannel("voice3change", random(100));
-    } else if (keyCode === 52) {
-        cs.setControlChannel("voice4change", random(100));
-    } else if (keyCode === 53) {
-        cs.setControlChannel("voice5change", random(100));
-    } else if (keyCode === 54) {
-        cs.setControlChannel("voice1vol", .2);
-    } else if (keyCode === 55) {
-        cs.setControlChannel("voice2vol", .2);
-    } else if (keyCode === 56) {
-        cs.setControlChannel("voice3vol", .2);
-    } else if (keyCode === 57) {
-        cs.setControlChannel("voice4vol", .2);
-    } else if (keyCode === 48) {
-        cs.setControlChannel("voice5vol", .2);
-    }
+    // if (keyCode === 49) {
+    //     cs.setControlChannel("voice1change", random(100));
+    // } else if (keyCode === 50) {
+    //     cs.setControlChannel("voice2change", random(100));
+    // } else if (keyCode === 51) {
+    //     cs.setControlChannel("voice3change", random(100));
+    // } else if (keyCode === 52) {
+    //     cs.setControlChannel("voice4change", random(100));
+    // } else if (keyCode === 53) {
+    //     cs.setControlChannel("voice5change", random(100));
+    // } else if (keyCode === 54) {
+    //     cs.setControlChannel("voice1vol", .2);
+    // } else if (keyCode === 55) {
+    //     cs.setControlChannel("voice2vol", .2);
+    // } else if (keyCode === 56) {
+    //     cs.setControlChannel("voice3vol", .2);
+    // } else if (keyCode === 57) {
+    //     cs.setControlChannel("voice4vol", .2);
+    // } else if (keyCode === 48) {
+    //     cs.setControlChannel("voice5vol", .2);
+    // }
 }
 
 function mousePressed()
@@ -371,92 +381,93 @@ function mousePressed()
             if (star.x > -10 && star.x < 10 &&
                 star.y > -10 && star.y < 10)
             {
-                if(star.name.includes("VolumeUp"))
-                {
-                    if(star.name.includes("Red"))
-                    {
-                        if(keyIsDown(32))
-                            cs.setControlChannel("voice1change", random(100));
-                        else
-                        {
-                            redLevel = constrain(redLevel+=0.05, 0, .5);
-                            cs.setControlChannel("voice1vol", redLevel);
-                        }
+                // if(star.name.includes("VolumeUp"))
+                // {
+                //     if(star.name.includes("One"))
+                //     {
+                //         if(keyIsDown(32))
+                //             cs.setControlChannel("voice1change", random(100));
+                //         else
+                //         {
+                //             trackOne = constrain(trackOne+=0.05, 0, .5);
+                //             cs.setControlChannel("voice1vol", trackOne);
+                //         }
                         
-                    }
-                    else if(star.name.includes("Green"))
-                    {
-                        if(keyIsDown(32))
-                           cs.setControlChannel("voice2change", random(100));
-                        else
-                        {
-                            greenLevel = constrain(greenLevel+=0.05, 0, .5);
-                            cs.setControlChannel("voice2vol", greenLevel);
-                        }
-                    }
-                    else if(star.name.includes("Yellow"))
-                    {
-                        if(keyIsDown(32))
-                            cs.setControlChannel("voice3change", random(100));
-                        else
-                        {
-                            yellowLevel = constrain(yellowLevel+=0.05, 0, .5);
-                            cs.setControlChannel("voice3vol", yellowLevel);
-                        }
-                    }
-                    else if(star.name.includes("Aqua"))
-                    {
-                        if(keyIsDown(32))
-                            cs.setControlChannel("voice4change", random(100));
-                        else
-                        {
-                            aquaLevel = constrain(aquaLevel+=0.05, 0, .5);
-                            cs.setControlChannel("voice4vol", aquaLevel);
-                        }
-                    }
-                    else if(star.name.includes("Pink"))
-                    {
-                        if(keyIsDown(32))
-                            cs.setControlChannel("voice5change", random(100));
-                        else
-                        {
-                            pinkLevel = constrain(pinkLevel+=0.05, 0, .5);
-                            cs.setControlChannel("voice5vol", pinkLevel);
-                        }
-                    }
-                    //trigger drum pattern change each time you turn up the volume
-                    cs.setControlChannel("triggerChange", random(100));
-                }
-                else if(star.name.includes("VolumeDown"))
-                {
-                    if(star.name.includes("Red"))
-                    {
-                        redLevel = constrain(redLevel-=0.05, 0, .5);
-                        cs.setControlChannel("voice1vol", redLevel);
-                    }
-                    else if(star.name.includes("Green"))
-                    {
-                        greenLevel = constrain(greenLevel-=0.05, 0, .5);
-                        cs.setControlChannel("voice2vol", greenLevel);
-                    }
-                    else if(star.name.includes("Yellow"))
-                    {
-                        yellowLevel = constrain(yellowLevel-=0.05, 0, .5);
-                        cs.setControlChannel("voice3vol", yellowLevel);
-                    }
-                    else if(star.name.includes("Aqua"))
-                    {
-                        aquaLevel = constrain(aquaLevel-=0.05, 0, .5);
-                        cs.setControlChannel("voice4vol", aquaLevel);
-                    }
-                    else if(star.name.includes("Pink"))
-                    {
-                        pinkLevel = constrain(pinkLevel-=0.05, 0, .5);
-                        cs.setControlChannel("voice5vol", pinkLevel);
-                    }
-                }
+                //     }
+                //     else if(star.name.includes("Two"))
+                //     {
+                //         if(keyIsDown(32))
+                //            cs.setControlChannel("voice2change", random(100));
+                //         else
+                //         {
+                //             trackTwo = constrain(trackTwo+=0.05, 0, .5);
+                //             cs.setControlChannel("voice2vol", trackTwo);
+                //         }
+                //     }
+                //     else if(star.name.includes("Three"))
+                //     {
+                //         if(keyIsDown(32))
+                //             cs.setControlChannel("voice3change", random(100));
+                //         else
+                //         {
+                //             trackFive = constrain(trackFive+=0.05, 0, .5);
+                //             cs.setControlChannel("voice3vol", trackFive);
+                //         }
+                //     }
+                //     else if(star.name.includes("Four"))
+                //     {
+                //         if(keyIsDown(32))
+                //             cs.setControlChannel("voice4change", random(100));
+                //         else
+                //         {
+                //             trackThree = constrain(trackThree+=0.05, 0, .5);
+                //             cs.setControlChannel("voice4vol", trackThree);
+                //         }
+                //     }
+                //     else if(star.name.includes("Five"))
+                //     {
+                //         if(keyIsDown(32))
+                //             cs.setControlChannel("voice5change", random(100));
+                //         else
+                //         {
+                //             trackFour = constrain(trackFour+=0.05, 0, .5);
+                //             cs.setControlChannel("voice5vol", trackFour);
+                //         }
+                //     }
+                //     //trigger drum pattern change each time you turn up the volume
+                //     cs.setControlChannel("triggerChange", random(100));
+                // }
+                // else if(star.name.includes("VolumeDown"))
+                // {
+                //     if(star.name.includes("One"))
+                //     {
+                //         trackOne = constrain(trackOne-=0.05, 0, .5);
+                //         cs.setControlChannel("voice1vol", trackOne);
+                //     }
+                //     else if(star.name.includes("Two"))
+                //     {
+                //         trackTwo = constrain(trackTwo-=0.05, 0, .5);
+                //         cs.setControlChannel("voice2vol", trackTwo);
+                //     }
+                //     else if(star.name.includes("Three"))
+                //     {
+                //         trackFive = constrain(trackFive-=0.05, 0, .5);
+                //         cs.setControlChannel("voice3vol", trackFive);
+                //     }
+                //     else if(star.name.includes("Four"))
+                //     {
+                //         trackThree = constrain(trackThree-=0.05, 0, .5);
+                //         cs.setControlChannel("voice4vol", trackThree);
+                //     }
+                //     else if(star.name.includes("Five"))
+                //     {
+                //         trackFour = constrain(trackFour-=0.05, 0, .5);
+                //         cs.setControlChannel("voice5vol", trackFour);
+                //     }
+                // }
 
                 //stars.splice(i, 1);
+                cs.setControlChannel("triggerChange", random(100));
                 setTimeout(destroyStar, 250, i, "MusicalStar");
             }
 
