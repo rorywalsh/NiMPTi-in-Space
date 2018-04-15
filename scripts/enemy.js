@@ -73,6 +73,8 @@ class Enemy
         arc(this.x, this.y, this.radius*.5, this.radius*.5, -PI, 0); 
         fill(this.bottomColour);
         ellipse(this.x, this.y+this.radius*.1, this.radius, this.radius*.5);
+        fill()
+
         this.pos+=.25;
         this.angle+=(this.radius+1)/150;      
     }

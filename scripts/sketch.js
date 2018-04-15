@@ -13,7 +13,7 @@ setTimeout(spawnFriendlyStar, 2000);
 setTimeout(spawnHostileStar, 2000);
 var numberOfRedStars = 0;
 var impact = 0;
-
+var showExplosion = 100;
 
 // Shooting a red plant will increase the volume of track 1
 // Letting a red incoming wobbly plant hit you will decrese the volume of that track. 
@@ -35,6 +35,34 @@ function setup()
     textAlign(CENTER);
 }
 
+//===========================================================================================
+// This function calls the main drawing function during gameplay, or the "loading Csound"
+// message when the Csound object is loading
+function draw()
+{
+    if (csoundLoaded)
+    {
+
+        if (mobileCheck.android)
+        {
+            offY = map(accelerationY, -90, 90, -5, 5);
+            offX = map(accelerationX, -90, 90, -5, 5);
+        }
+        drawScene();
+    }
+    else
+    {
+        //basic code to indicate Csound is still loading...
+        background(0, 0, 0);
+        fill(0, 0, 100, textAlpha);
+        text("...LOADING CSOUND...", width / 2, height / 2);
+        textAlpha += textAlphaSpeed;
+        if (textAlpha > 1 || textAlpha < 0)
+        {
+            textAlphaSpeed *= -1;
+        }
+    }
+}
 
 function drawScene()
 {
@@ -156,6 +184,26 @@ function drawScene()
         text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75 + shake);
         text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90 + shake);
         
+        if(showExplosion<50)
+        {
+            value = 1-exp(showExplosion/50);
+            if(showExplosion%2 == 0)
+                fill(255, 0, 0);
+            else
+                fill(255, 255, 0);
+
+            push();
+            translate(0, 0);            
+            rotate(frameCount);
+            explosion(0-value*20, 0-value*20, value*20, 5, 6);
+            explosion(0-value*20+random(-4, 4), 0-value*20+random(-4, 4), value*20, 5, 6);
+            rotate(-frameCount);
+            explosion(0-value*20+random(-2, 2), 0-value*20+random(-2, 2), value*20, 5, 6);
+            translate(0,0);
+            pop();
+            showExplosion+=5;
+        }
+
         strokeWeight(0);
         fill(color(255, 0, 0))
         rect(-80, 140-redLevel*100, 20, 2+redLevel*100);
@@ -179,34 +227,23 @@ function drawScene()
 
 }
 
-// This function calls the main drawing function during gameplay, or the "loading Csound"
-// message when the Csound object is loading
-function draw()
+function explosion(x, y, radius1, radius2, npoints) 
 {
-    if (csoundLoaded)
+    var angle = TWO_PI / npoints;
+    var halfAngle = angle/2.0;
+    beginShape();
+    for (var a = 0; a < TWO_PI; a += angle) 
     {
-
-        if (mobileCheck.android)
-        {
-            offY = map(accelerationY, -90, 90, -5, 5);
-            offX = map(accelerationX, -90, 90, -5, 5);
-        }
-        drawScene();
+      var sx = x + cos(a) * radius2;
+      var sy = y + sin(a) * radius2;
+      vertex(sx, sy);
+      sx = x + cos(a+halfAngle) * radius1;
+      sy = y + sin(a+halfAngle) * radius1;
+      vertex(sx, sy);
     }
-    else
-    {
-        //basic code to indicate Csound is still loading...
-        background(0, 0, 0);
-        fill(0, 0, 100, textAlpha);
-        text("...LOADING CSOUND...", width / 2, height / 2);
-        textAlpha += textAlphaSpeed;
-        if (textAlpha > 1 || textAlpha < 0)
-        {
-            textAlphaSpeed *= -1;
-        }
-    }
+    endShape(CLOSE);
 }
-
+//===========================================================================================
 function resetLevel()
 {
     numberOfRedStars = 0;
@@ -221,7 +258,9 @@ function resetLevel()
         star.hDirection = 0;
     }
 }
-
+//===========================================================================================
+// timed methods.
+//===========================================================================================
 function spawnFriendlyStar()
 {
     //use simple weighting to determine colour
@@ -240,18 +279,7 @@ function spawnFriendlyStar()
     star = stars[stars.length - 1];
     star.x = random(-100, 100);
     star.y = random(-100, 100);
-    setTimeout(spawnFriendlyStar, 5000+random(10000));
-    
-}
-
-function createStar(type, colour)
-{
-    if(random()<.5)
-        stars.push(new Star(type+"VolumeUp"));
-    else
-        stars.push(new Star(type+"VolumeDown"));
-
-    stars[stars.length - 1].colour = colour;
+    setTimeout(spawnFriendlyStar, 5000+random(10000));    
 }
 
 function spawnHostileStar()
@@ -265,6 +293,32 @@ function spawnHostileStar()
     setTimeout(spawnHostileStar, 5000+random(5000));
 }
 
+function createStar(type, colour)
+{
+    if(random()<.5)
+        stars.push(new Star(type+"VolumeUp"));
+    else
+        stars.push(new Star(type+"VolumeDown"));
+
+    stars[stars.length - 1].colour = colour;
+}
+
+function destroyStar(index, type)
+{
+    cs.readScore('i"Explosion" 0 1')
+    if(type == "MusicalStar") 
+        stars.splice(index, 1);
+    else if(type == "Enemy")
+    {
+        enemies.splice(index, 1);
+        cs.setControlChannel('shuffleAll', random(100));
+    }
+    showExplosion = 0;
+}
+
+//===========================================================================================
+//  Input methods
+//===========================================================================================
 function keyPressed()
 {
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
@@ -301,7 +355,6 @@ function keyPressed()
         cs.setControlChannel("voice5vol", .2);
     }
 }
-
 
 function mousePressed()
 {
@@ -421,22 +474,13 @@ function mousePressed()
     }
 }
 
-function destroyStar(index, type)
-{
-    cs.readScore('i"Explosion" 0 1')
-    if(type == "MusicalStar") 
-        stars.splice(index, 1);
-    else if(type == "Enemy")
-    {
-        enemies.splice(index, 1);
-        cs.setControlChannel('shuffleAll', random(100));
-    }
-}
 
 function touchStart() 
 {
   screenTouch = true;
 }
+
+//==================================================================================
 
 function windowResized()
 {
