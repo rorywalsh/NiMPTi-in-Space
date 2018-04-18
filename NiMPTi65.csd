@@ -255,18 +255,22 @@ endin
 ; really simple synth with 5 voices
 ;-----------------------------------------------
 instr Synth
-    k1 oscil 1, 1/4, 99
-    a1 oscili .2, cpspch(k1), 2
-    k2 oscil 1, 1/2, 98
-    a2 oscili .2, cpspch(k2), 2
-    k3 oscil 1, 1/-8, 97
-    a3 oscili .2, cpspch(k3), 2
-    k4 oscil 1, 1/8, 95
-    a4 oscili .2, cpspch(k4), 2
-    k5 oscil 1, 1/4, 96
-    a5 oscili .2, cpspch(k5), 2
-    aMix = a1+a2+a3+a4+a5
-    outs aMix*.2, aMix*.2
+    kMasterClock init 0
+    a1, a2, a3, a4, a5 init 0
+    kIndex1, kIndex2, kIndex3, kIndex4, kIndex5 init 0
+    if metro(18) == 1 then
+        if(kMasterClock%4 == 0) then
+            kNote1 tab kIndex1, 99
+            
+            kIndex1 = (kIndex1==15 ? 0 : kIndex1+1)
+            printks "Hello\n", 0
+        endif
+
+        kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
+    endif
+
+    a1 oscili .25, cpsmidinn(kNote1), 2
+    outs a1, a1
 endin
 
 ;-------------------------------------------------------------------------------
@@ -288,21 +292,21 @@ f4 0 2 2 1 0
 ; i"Synth" 	0 		3600	4 		99 			1		1		1   2 ; freq 1/4 4 notes a second
 ; i"Synth" 	0 		3600 	2 		98			2		1		1   1 ; freq 1/8 8 notes a second
 ; i"Synth" 	0 		3600 	-8 		97			3		2		1   1 ; freq 1/8 2 notes a second
-; i"Synth" 	0 		3600 	8 		95			4		1		2   1 ; freq 1/8 2 notes a second
+; i"Synth" 	0 		3600 	8 		95			4		1		2   1 ; freq 1/8 1 notes a second - table size 8
 ; i"Synth" 	0 		3600 	4 		96			5		2		1   1 ; freq 1/4 4 notes a second 
 f99 0 16 -2 60 0 65 65 0 0 0 7 65 60 6 6 60 67 65 65 0 0
 f98 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f97 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f96 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
-f95 0 8 -2 0 0 60 69 69 72 79 0 0 60 69 69 72 79 0 0 60 69 69 72 79 0 
+f95 0 8  -2 0 0 60 69 69 72 79 0 0 60 69 69 72 79 0 0 60 69 69 72 79 0 
 i20000 0 z
 i2 0 .1
 i3 0 z
 i4 0 z
 i5 0 z
 
-i"MainInstrument"	0	z
-;i"Synth" 	0 	z
+;i"MainInstrument"	0	z
+i"Synth" 	0 	z
 
 
 
