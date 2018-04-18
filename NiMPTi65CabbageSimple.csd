@@ -92,7 +92,7 @@ instr MainInstrument
     kTick oscil 1, 4, 4			
     kBeat init 0
     kTrig changed kTick	
-    if kTrig==1 then		; in each new beat enter block
+    if metro(8)==1 then		; in each new beat enter block
         kDrum1 tab kBeat, 100	; read value from tables, 1 indicates a hit
         if kDrum1 ==1 then
             event "i", 1000, 0, .25, .25
@@ -150,9 +150,9 @@ instr MainInstrument
     aVoice4 oscili aEnv4*kGain4, cpspch(kNote4), 1
     aVoice5 oscili aEnv5*kGain5, cpspch(kNote5), 1
     
-    aMix = aVoice1+aVoice2+aVoice3+aVoice4+aVoice5
+    ;aMix = aVoice1+aVoice2+aVoice3+aVoice4+aVoice5
     
-    outs aMix*.25, aMix*.25    
+    ;outs aMix*.25, aMix*.25    
 endin
 
 
@@ -329,8 +329,8 @@ i3 0 z
 i4 0 z
 i5 0 z
 
-;i"MainInstrument"	0	z
-i"Synth" 	0 	z
+i"MainInstrument"	0	z
+;i"Synth" 	0 	z
 
 
 

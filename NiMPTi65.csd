@@ -55,31 +55,66 @@ gaEnv1, gaEnv2, gaEnv3, gaEnv4, gaEnv5 init 0
 ; simple drum sequencer - 
 instr MainInstrument
     kVol chnget "drumVol"
-    kNewPattern init 0
-    kTick oscil 1, 4, 4			
     kBeat init 0
-    kTrig changed kTick	
-    if kTrig==1 then		; in each new beat enter block
-        kDrum1 tab kBeat, 100	; read value from tables, 1 indicates a hit
-        if kDrum1 ==1 then
-            event "i", 1000, 0, .25, .25
+    kMasterClock init 0
+    a1, a2, a3, a4, a5 init 0
+    kIndex1, kIndex2, kIndex3, kIndex4, kIndex5 init 0
+
+    if metro(16)==1 then		; in each new beat enter block
+
+        ;printk2 kMasterClock
+        if kMasterClock%2 == 0 then
+            kDrum1 tab kBeat, 100	; read value from tables, 1 indicates a hit
+            if kDrum1 ==1 then
+                event "i", 1000, 0, .25, .25
+            endif
+            kDrum2 tab kBeat, 101	
+            if kDrum2 ==1 then
+                event "i", 2000, 0, 1, 100, giWaveshape1, .25
+            endif
+            kDrum3 tab kBeat, 102
+            if kDrum3 ==1 then
+                event "i", 3000, 0, .25, 50, giWaveshape1, .25
+            endif
+            kDrum4 tab kBeat, 103
+            if kDrum4 ==1 then
+                event "i", 4000, 0, .1, 100, giWaveshape1, .25
+            endif
+            kBeat = (kBeat==15 ? 0 : kBeat+1)
         endif
-        kDrum2 tab kBeat, 101	
-        if kDrum2 ==1 then
-            event "i", 2000, 0, 1, 100, giWaveshape1, .25
+
+        if kMasterClock%4 == 0 then
+            kNote1 tab kIndex1, 99
+            kIndex1 = (kIndex1==15 ? 0 : kIndex1+1)
+            event "i", "Env", 0, 1/4, 1
         endif
-        kDrum3 tab kBeat, 102
-        if kDrum3 ==1 then
-            event "i", 3000, 0, .25, 50, giWaveshape1, .25
+	
+        if kMasterClock%2 == 0 then
+            kNote2 tab kIndex2, 98
+            kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
+            event "i", "Env", 0, 1/8, 2
         endif
-        kDrum4 tab kBeat, 103
-        if kDrum4 ==1 then
-            event "i", 4000, 0, .1, 100, giWaveshape1, .25
+
+        if kMasterClock%4 == 0 then
+            kNote3 tab 15-kIndex3, 97 	;moves backwards
+            kIndex3 = (kIndex3==15 ? 0 : kIndex3+1)
+            event "i", "Env", 0, 1/4, 3, 8
         endif
-        kBeat = (kBeat==15 ? 0 : kBeat+1)
-    
-        ;increment kNewPattern on each beat
-        kNewPattern=kNewPattern+1
+        
+        if kMasterClock%16 == 0  then
+            kNote4 tab kIndex4, 95
+            kIndex4 = (kIndex4==15 ? 0 : kIndex4+1)
+            gaEnv4 = .5
+        endif
+
+        if kMasterClock%4 == 0  then
+            kNote5 tab kIndex5, 98
+            kIndex5 = (kIndex5==15 ? 0 : kIndex5+1)
+            event "i", "Env", 0, 1/4, 5
+        endif
+	
+        kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
+
     endif
 
     kNewPattern chnget "triggerChange"
@@ -99,29 +134,13 @@ instr MainInstrument
     kGain5 chnget "voice5vol"
     kGain5 port kGain5, 1   
 
-    kNote1 oscil 1, 1/4, 99
-    kNote2 oscil 1, 1/2, 98
-    kNote3 oscil 1, 1/-8, 97
-    kNote4 oscil 1, 1/8, 95
-    kNote5 oscil 1, 1/4, 96
-    
-    aEnv1 oscili 1, abs(4), 1 
-    aEnv2 oscili 1, abs(2), 1 
-    aEnv3 oscili 1, abs(-8), 1 
-    aEnv4 = .5
-    aEnv5 oscili 1, abs(4), 1 
-
-    iTransp = 12
-
-    aVoice1 oscili aEnv1*kGain1, cpsmidinn(kNote1-iTransp), 2
-    aVoice2 oscili aEnv2*kGain2, cpsmidinn(kNote2-iTransp), 1
-    aVoice3 oscili aEnv3*kGain3, cpsmidinn(kNote3-iTransp), 1
-    aVoice4 oscili aEnv4*kGain4, cpsmidinn(kNote4-iTransp), 1
-    aVoice5 oscili aEnv5*kGain5, cpsmidinn(kNote5-iTransp), 1
-    
-    aMix = aVoice1+aVoice2+aVoice3+aVoice4+aVoice5
-    
-    outs aMix*.25, aMix*.25    
+    a1 oscili .25*gaEnv1*kGain1, cpsmidinn(kNote1), 2
+    a2 oscili .25*gaEnv2*kGain2, cpsmidinn(kNote2), 1
+    a3 oscili .25*gaEnv3*kGain3, cpsmidinn(kNote3), 1
+    a4 oscili .25*gaEnv4*kGain4, cpsmidinn(kNote4), 1
+    a5 oscili .25*gaEnv5*kGain5, cpsmidinn(kNote5), 1
+    aMix = a1+a2+a3+a4+a5
+    outs aMix*.2, aMix*.2
 endin
 
 
@@ -259,47 +278,51 @@ instr Synth
         if(kMasterClock%4 == 0) then
             kNote1 tab kIndex1, 99
             kIndex1 = (kIndex1==15 ? 0 : kIndex1+1)
-            ;event "i", "Env", 0, 1, 1/4
+            event "i", "Env", 0, 1/4, 1
         endif
 	
         if(kMasterClock%2 == 0) then
             kNote2 tab kIndex2, 98
             kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
-            ;event "i", "Env", 0, 2, 1/2
+            event "i", "Env", 0, 1/8, 2
         endif
 
-        if(kMasterClock%8 == 0) then
+        if(kMasterClock%4 == 0) then
             kNote3 tab 15-kIndex3, 97 	;moves backwards
             kIndex3 = (kIndex3==15 ? 0 : kIndex3+1)
-            ;event "i", "Env", 0, 3, 1/8
+            event "i", "Env", 0, 1/4, 3, 8
         endif
         
         if(kMasterClock%16 == 0) then
             kNote4 tab kIndex4, 95
             kIndex4 = (kIndex4==15 ? 0 : kIndex4+1)
-            ;event "i", "Env", 0, 4, 1/16
+            gaEnv4 = .5
         endif
 
         if(kMasterClock%4 == 0) then
-            kNote5 tab kIndex5, 99
+            kNote5 tab kIndex5, 98
             kIndex5 = (kIndex5==15 ? 0 : kIndex5+1)
-            ;event "i", "Env", 0, 5, 1/4
+            event "i", "Env", 0, 1/4, 5
         endif
 	
         kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
     endif
 
     a1 oscili .25*gaEnv1, cpsmidinn(kNote1), 2
-    a2 oscili .25*gaEnv2, cpsmidinn(kNote2), 2
-    a3 oscili .25*gaEnv3, cpsmidinn(kNote3), 2
-    a4 oscili .25*gaEnv4, cpsmidinn(kNote4), 2
-    a5 oscili .25*gaEnv5, cpsmidinn(kNote5), 2
+    a2 oscili .25*gaEnv2, cpsmidinn(kNote2), 1
+    a3 oscili .25*gaEnv3, cpsmidinn(kNote3), 1
+    a4 oscili .25*gaEnv4, cpsmidinn(kNote4), 1
+    a5 oscili .25*gaEnv5, cpsmidinn(kNote5), 1
     aMix = a1+a2+a3+a4+a5
     outs aMix*.2, aMix*.2
 endin
 
 instr Env
-    aPhasor phasor p3
+    if p5 > 0 then
+        aPhasor phasor p5
+    else
+        aPhasor phasor 1/p3
+    endif
     if p4 == 1 then
         gaEnv1 tab aPhasor, 1, 1 
     elseif p4 == 2 then
@@ -334,19 +357,24 @@ f4 0 2 2 1 0
 ; i"Synth" 	0 		3600 	-8 		97			3		2		1   1 ; freq 1/8 2 notes a second
 ; i"Synth" 	0 		3600 	8 		95			4		1		2   1 ; freq 1/8 1 notes a second - table size 8
 ; i"Synth" 	0 		3600 	4 		96			5		2		1   1 ; freq 1/4 4 notes a second 
-f99 0 16 -2 60 0 65 65 0 0 0 7 65 60 6 6 60 67 65 65 0 0
+f99 0 16 -2 60 0 65 65 0 0 0 60 65 60 48 48 60 67 65 65 0 0
 f98 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f97 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f96 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f95 0 16  -2 0 0 60 69 69 72 79 0 0 0 60 69 69 72 79 0 
+
+
+
+
+
 i20000 0 z
 i2 0 .1
 i3 0 z
 i4 0 z
 i5 0 z
 
-;i"MainInstrument"	0	z
-i"Synth" 	0 	z
+i"MainInstrument"	0	z
+;i"Synth" 	0 	z
 
 
 
