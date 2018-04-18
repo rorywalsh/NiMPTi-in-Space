@@ -308,12 +308,23 @@ function destroyStar(index, type)
     else if(type == "Enemy")
     {
         enemies.splice(index, 1);
-        if(score>36 && enemiesKilled%5 == 0 )
+        
+        if(score>36)
         {
-            voice = int(random(1, 5));
-            cs.setControlChannel('voice'+String(voice)+'change', random(100));
-            print("Changing " +'voice'+String(voice)+'change');
+            if(enemiesKilled%5 == 0) 
+            {
+                voice = int(random(1, 5));
+                cs.setControlChannel('voice'+String(voice)+'change', random(100));
+                print("Changing " +'voice'+String(voice)+'change');
+            }
+
+            if(enemiesKilled%15 == 0) 
+            {
+                voice = int(random(1, 5));
+                cs.setControlChannel('transp'+String(voice), random()>.5 ? 12 : -12);
+            }
         }
+        
         enemiesKilled++;    
         score++;
     }

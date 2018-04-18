@@ -60,6 +60,8 @@ instr MainInstrument
     a1, a2, a3, a4, a5 init 0
     kIndex1, kIndex2, kIndex3, kIndex4, kIndex5 init 0
 
+    gaEnv2 oscili 1, 2, 1
+
     if metro(16)==1 then		; in each new beat enter block
 
         ;printk2 kMasterClock
@@ -92,7 +94,7 @@ instr MainInstrument
         if kMasterClock%2 == 0 then
             kNote2 tab kIndex2, 98
             kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
-            event "i", "Env", 0, 1/8, 2
+            ;en is controlled by oscillator
         endif
 
         if kMasterClock%4 == 0 then
@@ -134,11 +136,11 @@ instr MainInstrument
     kGain5 chnget "voice5vol"
     kGain5 port kGain5, 1   
 
-    a1 oscili .25*gaEnv1*kGain1, cpsmidinn(kNote1), 2
-    a2 oscili .25*gaEnv2*kGain2, cpsmidinn(kNote2), 1
-    a3 oscili .25*gaEnv3*kGain3, cpsmidinn(kNote3), 1
-    a4 oscili .25*gaEnv4*kGain4, cpsmidinn(kNote4), 1
-    a5 oscili .25*gaEnv5*kGain5, cpsmidinn(kNote5), 1
+    a1 oscili gaEnv1*kGain1, cpsmidinn(kNote1+chnget:k("transp1")), 2
+    a2 oscili gaEnv2*kGain2, cpsmidinn(kNote2+chnget:k("transp2")), 1
+    a3 oscili gaEnv3*kGain3, cpsmidinn(kNote3+chnget:k("transp3")), 1
+    a4 oscili gaEnv4*kGain4, cpsmidinn(kNote4+chnget:k("transp4")), 1
+    a5 oscili gaEnv5*kGain5, cpsmidinn(kNote5+chnget:k("transp5")), 1
     aMix = a1+a2+a3+a4+a5
     outs aMix*.2, aMix*.2
 endin
@@ -308,11 +310,11 @@ instr Synth
         kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
     endif
 
-    a1 oscili .25*gaEnv1, cpsmidinn(kNote1), 2
-    a2 oscili .25*gaEnv2, cpsmidinn(kNote2), 1
-    a3 oscili .25*gaEnv3, cpsmidinn(kNote3), 1
-    a4 oscili .25*gaEnv4, cpsmidinn(kNote4), 1
-    a5 oscili .25*gaEnv5, cpsmidinn(kNote5), 1
+    a1 oscili .25*gaEnv1, cpsmidinn(kNote1+chnget:k("transp1")), 2
+    a2 oscili .25*gaEnv2, cpsmidinn(kNote2+chnget:k("transp2")), 1
+    a3 oscili .25*gaEnv3, cpsmidinn(kNote3+chnget:k("transp3")), 1
+    a4 oscili .25*gaEnv4, cpsmidinn(kNote4+chnget:k("transp4")), 1
+    a5 oscili .25*gaEnv5, cpsmidinn(kNote5+chnget:k("transp5")), 1
     aMix = a1+a2+a3+a4+a5
     outs aMix*.2, aMix*.2
 endin
@@ -345,7 +347,7 @@ endin
 </CsInstruments>
 <CsScore>
 f0 z
-f1 0 4096 7 0.001 96 1 4000 0.001
+f1 0 4096 7 0.001 196 1 3900 0.001
 f2 0 8 10 1 1
 f3 0 1024 10 1 1
 f4 0 2 2 1 0
