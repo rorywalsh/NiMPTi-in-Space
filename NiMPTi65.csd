@@ -258,19 +258,42 @@ instr Synth
     kMasterClock init 0
     a1, a2, a3, a4, a5 init 0
     kIndex1, kIndex2, kIndex3, kIndex4, kIndex5 init 0
-    if metro(18) == 1 then
+    if metro(16) == 1 then
         if(kMasterClock%4 == 0) then
             kNote1 tab kIndex1, 99
-            
             kIndex1 = (kIndex1==15 ? 0 : kIndex1+1)
-            printks "Hello\n", 0
+        endif
+	
+	if(kMasterClock%2 == 0) then
+            kNote2 tab kIndex2, 98
+            kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
         endif
 
+	if(kMasterClock%8 == 0) then
+            kNote3 tab 15-kIndex3, 97 	;moves backwards
+            kIndex3 = (kIndex3==15 ? 0 : kIndex3+1)
+        endif
+	
+	if(kMasterClock%16 == 0) then
+            kNote4 tab kIndex4, 95
+            kIndex4 = (kIndex4==15 ? 0 : kIndex4+1)
+        endif
+
+	if(kMasterClock%4 == 0) then
+            kNote5 tab kIndex5, 99
+            kIndex5 = (kIndex5==15 ? 0 : kIndex5+1)
+        endif
+	
         kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
     endif
 
     a1 oscili .25, cpsmidinn(kNote1), 2
-    outs a1, a1
+    a1 oscili .25, cpsmidinn(kNote2), 1
+    a1 oscili .25, cpsmidinn(kNote3), 1
+    a1 oscili .25, cpsmidinn(kNote4), 1
+    a1 oscili .25, cpsmidinn(kNote5), 1
+    aMix = a1+a2+a3+a4+a5
+    outs aMix*.2, aMix*.2
 endin
 
 ;-------------------------------------------------------------------------------
@@ -298,7 +321,7 @@ f99 0 16 -2 60 0 65 65 0 0 0 7 65 60 6 6 60 67 65 65 0 0
 f98 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f97 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f96 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
-f95 0 8  -2 0 0 60 69 69 72 79 0 0 60 69 69 72 79 0 0 60 69 69 72 79 0 
+f95 0 16  -2 0 0 60 69 69 72 79 0 0 0 60 69 69 72 79 0 
 i20000 0 z
 i2 0 .1
 i3 0 z
