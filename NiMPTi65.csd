@@ -21,11 +21,6 @@ nchnls = 2
 ; shuffled by by hitting the change button in each voice strip.    
 ; Rory Walsh, 2014.
 
-
-
-
-
-
 ; TableShuffle UDO - posted to Csound list by Jim Aikin. Tableshuffle opcode not 
 ; working for some reason.. 
 opcode TableShuffle, 0, i
@@ -55,6 +50,7 @@ giTable4 ftgen 103, 0, 16, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0
 giWaveshape1 ftgen 0, 0, 1024, 10, 1 
 giWaveshape2 ftgen 0, 0, 16, 10, 1, 0, .1, 0, 1, .5 
 
+gaEnv1, gaEnv2, gaEnv3, gaEnv4, gaEnv5 init 0
 ;-------------------------------------------------------
 ; simple drum sequencer - 
 instr MainInstrument
@@ -259,41 +255,62 @@ instr Synth
     a1, a2, a3, a4, a5 init 0
     kIndex1, kIndex2, kIndex3, kIndex4, kIndex5 init 0
     if metro(16) == 1 then
+
         if(kMasterClock%4 == 0) then
             kNote1 tab kIndex1, 99
             kIndex1 = (kIndex1==15 ? 0 : kIndex1+1)
+            ;event "i", "Env", 0, 1, 1/4
         endif
 	
-	if(kMasterClock%2 == 0) then
+        if(kMasterClock%2 == 0) then
             kNote2 tab kIndex2, 98
             kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
+            ;event "i", "Env", 0, 2, 1/2
         endif
 
-	if(kMasterClock%8 == 0) then
+        if(kMasterClock%8 == 0) then
             kNote3 tab 15-kIndex3, 97 	;moves backwards
             kIndex3 = (kIndex3==15 ? 0 : kIndex3+1)
+            ;event "i", "Env", 0, 3, 1/8
         endif
-	
-	if(kMasterClock%16 == 0) then
+        
+        if(kMasterClock%16 == 0) then
             kNote4 tab kIndex4, 95
             kIndex4 = (kIndex4==15 ? 0 : kIndex4+1)
+            ;event "i", "Env", 0, 4, 1/16
         endif
 
-	if(kMasterClock%4 == 0) then
+        if(kMasterClock%4 == 0) then
             kNote5 tab kIndex5, 99
             kIndex5 = (kIndex5==15 ? 0 : kIndex5+1)
+            ;event "i", "Env", 0, 5, 1/4
         endif
 	
         kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
     endif
 
-    a1 oscili .25, cpsmidinn(kNote1), 2
-    a1 oscili .25, cpsmidinn(kNote2), 1
-    a1 oscili .25, cpsmidinn(kNote3), 1
-    a1 oscili .25, cpsmidinn(kNote4), 1
-    a1 oscili .25, cpsmidinn(kNote5), 1
+    a1 oscili .25*gaEnv1, cpsmidinn(kNote1), 2
+    a2 oscili .25*gaEnv2, cpsmidinn(kNote2), 2
+    a3 oscili .25*gaEnv3, cpsmidinn(kNote3), 2
+    a4 oscili .25*gaEnv4, cpsmidinn(kNote4), 2
+    a5 oscili .25*gaEnv5, cpsmidinn(kNote5), 2
     aMix = a1+a2+a3+a4+a5
     outs aMix*.2, aMix*.2
+endin
+
+instr Env
+    aPhasor phasor p3
+    if p4 == 1 then
+        gaEnv1 tab aPhasor, 1, 1 
+    elseif p4 == 2 then
+        gaEnv2 tab aPhasor, 1, 1 
+    elseif p4 == 3 then
+        gaEnv3 tab aPhasor, 1, 1 
+    elseif p4 == 4 then
+        gaEnv4 tab aPhasor, 1, 1 
+    elseif p4 == 5 then
+        gaEnv5 tab aPhasor, 1, 1 
+    endif
 endin
 
 ;-------------------------------------------------------------------------------
