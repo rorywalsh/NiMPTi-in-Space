@@ -42,12 +42,18 @@ function onRuntimeInitialized()
       cs.setControlChannel("voice3fold", 10);
       cs.setControlChannel("voice4fold", 10);
       cs.setControlChannel("voice5fold", 10);
-      cs.setControlChannel("transp1", 0);
-      cs.setControlChannel("transp2", 0);
-      cs.setControlChannel("transp3", 0);
-      cs.setControlChannel("transp4", 0);
-      cs.setControlChannel("transp5", 0);
+      cs.setControlChannel("voice1transp", 0);
+      cs.setControlChannel("voice2transp", 0);
+      cs.setControlChannel("voice3transp", 0);
+      cs.setControlChannel("voice4transp", 0);
+      cs.setControlChannel("voice5transp", 0);
+      cs.setControlChannel("voice1Freq", 4);
+      cs.setControlChannel("voice2Freq", 2);
+      cs.setControlChannel("voice3Freq", 4);
+      cs.setControlChannel("voice4Freq", 16);
+      cs.setControlChannel("voice5Freq", 4);
 
+      cs.readScore("f0 z");
       cs.audioContext.resume();
     });
     

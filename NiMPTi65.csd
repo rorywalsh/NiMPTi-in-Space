@@ -85,34 +85,35 @@ instr MainInstrument
             kBeat = (kBeat==15 ? 0 : kBeat+1)
         endif
 
-        if kMasterClock%4 == 0 then
+        ;synth melodies
+        if kMasterClock%chnget:k("voice1Freq") == 0 then
             kNote1 tab kIndex1, 99
             kIndex1 = (kIndex1==15 ? 0 : kIndex1+1)
-            event "i", "Env", 0, 1/4, 1
+            event "i", "Env", 0, 1/chnget:k("voice1Freq"), 1
         endif
 	
-        if kMasterClock%2 == 0 then
+        if kMasterClock%chnget:k("voice2Freq") == 0 then
             kNote2 tab kIndex2, 98
             kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
             ;en is controlled by oscillator
         endif
 
-        if kMasterClock%4 == 0 then
+        if kMasterClock%chnget:k("voice3Freq") == 0 then
             kNote3 tab 15-kIndex3, 97 	;moves backwards
             kIndex3 = (kIndex3==15 ? 0 : kIndex3+1)
-            event "i", "Env", 0, 1/4, 3, 8
+            event "i", "Env", 0, 1/chnget:k("voice3Freq"), 3, 8
         endif
         
-        if kMasterClock%16 == 0  then
+        if kMasterClock%chnget:k("voice4Freq") == 0  then
             kNote4 tab kIndex4, 95
             kIndex4 = (kIndex4==15 ? 0 : kIndex4+1)
             gaEnv4 = .5
         endif
 
-        if kMasterClock%4 == 0  then
+        if kMasterClock%chnget:k("voice5Freq") == 0  then
             kNote5 tab kIndex5, 98
             kIndex5 = (kIndex5==15 ? 0 : kIndex5+1)
-            event "i", "Env", 0, 1/4, 5
+            event "i", "Env", 0, 1/chnget:k("voice5Freq"), 5
         endif
 	
         kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
@@ -136,13 +137,20 @@ instr MainInstrument
     kGain5 chnget "voice5vol"
     kGain5 port kGain5, 1   
 
-    a1 oscili gaEnv1*kGain1, cpsmidinn(kNote1+chnget:k("transp1")), 2
-    a2 oscili gaEnv2*kGain2, cpsmidinn(kNote2+chnget:k("transp2")), 1
-    a3 oscili gaEnv3*kGain3, cpsmidinn(kNote3+chnget:k("transp3")), 1
-    a4 oscili gaEnv4*kGain4, cpsmidinn(kNote4+chnget:k("transp4")), 1
-    a5 oscili gaEnv5*kGain5, cpsmidinn(kNote5+chnget:k("transp5")), 1
+    a1 oscili gaEnv1*kGain1, cpsmidinn(kNote1+chnget:k("voice1transp"));, 2
+    a2 oscili gaEnv2*kGain2, cpsmidinn(kNote2+chnget:k("voice2transp"));, 1
+    a3 oscili gaEnv3*kGain3, cpsmidinn(kNote3+chnget:k("voice3transp"));, 1
+    a4 oscili gaEnv4*kGain4, cpsmidinn(kNote4+chnget:k("voice4transp"));, 1
+    a5 oscili gaEnv5*kGain5, cpsmidinn(kNote5+chnget:k("voice5transp"));, 1
     aMix = a1+a2+a3+a4+a5
     outs aMix*.2, aMix*.2
+
+    kTextUpdated chnget "characterChanged"
+    kRandomFreqForText randh 50, 10
+    if changed(kTextUpdated) == 1 then
+         event "i", 10, 0, .1, 50+abs(kRandomFreqForText), 0, .5;
+    endif    
+    
 endin
 
 
@@ -338,6 +346,14 @@ instr Env
     endif
 endin
 
+;synth simple for intro text
+instr 10
+    aexp expon p6+0.001, p3, 0.01
+    a1 oscil aexp, cpsmidinn(p4)
+    kpan randh 1, .01, 2
+    outs a1*abs(kpan), a1*(1-abs(kpan)) 
+endin
+
 ;-------------------------------------------------------------------------------
 instr 20000
 ;a1, a2 monitor
@@ -363,7 +379,8 @@ f99 0 16 -2 60 0 65 65 0 0 0 60 65 60 48 48 60 67 65 65 0 0
 f98 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f97 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f96 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
-f95 0 16  -2 0 0 60 69 69 72 79 0 0 0 60 69 69 72 79 0 
+;0 0 7.0 6.09 7.09 8 8.07 0 0 
+f95 0 16  -2 0 0 60 57 69 72 79 0 0 0 60 57 69 72 79 0
 
 
 
@@ -374,7 +391,7 @@ i2 0 .1
 i3 0 z
 i4 0 z
 i5 0 z
-
+i10 0 z
 i"MainInstrument"	0	z
 ;i"Synth" 	0 	z
 

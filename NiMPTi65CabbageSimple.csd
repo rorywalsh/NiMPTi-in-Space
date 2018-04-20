@@ -150,9 +150,9 @@ instr MainInstrument
     aVoice4 oscili aEnv4*kGain4, cpspch(kNote4), 1
     aVoice5 oscili aEnv5*kGain5, cpspch(kNote5), 1
     
-    ;aMix = aVoice1+aVoice2+aVoice3+aVoice4+aVoice5
+    aMix = aVoice1+aVoice2+aVoice3+aVoice4+aVoice5
     
-    ;outs aMix*.25, aMix*.25    
+    outs aMix*.25, aMix*.25    
 endin
 
 

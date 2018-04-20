@@ -15,6 +15,9 @@ var numberOfRedStars = 0;
 var impact = 0;
 var showExplosion = 100;
 var movedLeft = 0, movedRight = 0;
+var showIntroScreen = true;
+var typeIndex = 0;
+var introTimer =0  ;
 
 // Shooting a red plant will increase the volume of track 1
 // Letting a red incoming wobbly plant hit you will decrese the volume of that track. 
@@ -34,6 +37,7 @@ function setup()
     var cans = createCanvas(windowWidth, windowHeight);
     cans.style('display', 'block');
     textAlign(CENTER);
+    background(0);
 }
 
 //===========================================================================================
@@ -43,13 +47,17 @@ function draw()
 {
     if (csoundLoaded)
     {
-
-        if (mobileCheck.android)
-        {
-            offY = map(accelerationY, -90, 90, -5, 5);
-            offX = map(accelerationX, -90, 90, -5, 5);
-        }
-        drawScene();
+        // if(showIntroScreen)
+        //     drawIntroScreen();
+        // else
+        // {
+            if (mobileCheck.android)
+            {
+                offY = map(accelerationY, -90, 90, -5, 5);
+                offX = map(accelerationX, -90, 90, -5, 5);
+            }
+            drawScene();
+        // }
     }
     else
     {
@@ -63,6 +71,64 @@ function draw()
             textAlphaSpeed *= -1;
         }
     }
+
+}
+
+function drawIntroScreen()
+{
+    
+    textSize(30);
+    strokeWeight(0);
+    fill(255);
+    
+    if(introTimer<300)
+        typeTextBox(width / 2 - 300, height / 2, 600, 200, 20, LEFT, color(255, 255, 255), "NiMPTI is an intergalactic garbage collector whose mission is to rid the virtual file space universe of bad programmers. ");
+    else if(introTimer>300 && introTimer < 600 )
+        typeTextBox(width / 2 - 300, height / 2, 600, 200, 20, LEFT, color(255, 255, 255), "He has been tasked with freeing bytes of memory that haven't been released by their host programs.");
+    else if(introTimer>600 && introTimer<900)
+        typeTextBox(width / 2 - 300, height / 2, 600, 200, 20, LEFT, color(255, 255, 255), "Whilst freeing memory he must also battle the programmers who are responsible who send their poorly programmed AI spaceship clones to destroy NiMPTi.");
+    else
+        typeTextBox(width / 2 - 300, height / 3, 600, 200, 20, LEFT, color(255, 255, 255), "It's up to NiMPTi to destroy all the poorly programmed clones and free the virtual file space galaxy of bad programmers for once and for all! ");
+            //    // 
+    
+
+    introTimer++;
+
+    if(introTimer<900)
+    {
+        if(introTimer%300 == 0)
+            typeIndex = 0;
+    }
+    else
+    {
+        background(0);
+        text("Press space to play", width / 2, height / 1.5);
+
+        textSize(25);
+        text("Use the arrow buttons or WASD keys to move.", width / 2, height / 1.5+ 45);
+        text("Press spacebar or click a mouse button to fire", width / 2, height / 1.5+ 70)
+    }
+
+}
+
+//type text into a box
+function typeTextBox(x, y, textWidth, textHeight, fontSize, align, col, str)
+{
+    background(0);
+  frameCount++; 
+  if(frameCount%2==0)
+      typeIndex++;
+  if(typeIndex<str.length)
+  {     
+    fill(0);
+    rect(x-10, y-10, textWidth+20, textHeight+20);
+    textAlign(align);
+    fill(col);
+    textSize(fontSize);
+    var subString = str.substring(0, typeIndex);
+    text(subString, x, y, textWidth, textHeight);
+    cs.setControlChannel("characterChanged", random(100));
+  } 
 }
 
 function drawScene()
@@ -284,7 +350,7 @@ function spawnHostileStar()
     enemy.y = random(-300, 300);
     enemy.bottomColour = color(72, 112, 85);
     enemy.topColour = color(154, 137, 86);
-    setTimeout(spawnHostileStar, map(score, 0, 100, 5000, 0)+random(2000));
+    setTimeout(spawnHostileStar, map(score, 0, 300, 5000, 0)+random(2000));
 }
 
 function createStar(type, colour)
@@ -311,17 +377,31 @@ function destroyStar(index, type)
         
         if(score>36)
         {
-            if(enemiesKilled%5 == 0) 
+            if(score%5 == 0) 
             {
                 voice = int(random(1, 5));
                 cs.setControlChannel('voice'+String(voice)+'change', random(100));
-                print("Changing " +'voice'+String(voice)+'change');
             }
 
-            if(enemiesKilled%15 == 0) 
+            if(score%7 == 0) 
+            {
+                var tempi = [2, 4, 8, 16];
+                var tempo = int(random(0, 2));
+                var newTempo = tempi[tempo];
+                voice = int(random(1, 5));
+                if(voice==4)
+                    newTempo = tempi[tempo]+8;
+                cs.setControlChannel('voice'+String(voice)+'Freq', newTempo);
+            }
+
+            if(score%15 == 0) 
             {
                 voice = int(random(1, 5));
-                cs.setControlChannel('transp'+String(voice), random()>.5 ? 12 : -12);
+                transFactor = random(1, 5);
+                if(transFactor<4)
+                    cs.setControlChannel('transp'+String(voice), random()>.5 ? 12 : -12);
+                else
+                    cs.setControlChannel('transp'+String(voice), random()>.5 ? 7 : -7);
             }
         }
         
@@ -381,6 +461,9 @@ function keyPressed()
     } else if (keyCode === 48) {
         cs.setControlChannel("voice5vol", .2);
     }
+
+    if(keyCode == 32)
+        mousePressAndSpacebar();
 }
 
 function keyReleased()
@@ -388,10 +471,19 @@ function keyReleased()
     movedLeft = 0;
     moveRight = 0;
 }
+
 function mousePressed()
+{
+    mousePressAndSpacebar();
+}
+
+function mousePressAndSpacebar()
 {
     if(gameOver)
         gameOver = false;
+    
+    if(showIntroScreen)
+        showIntroScreen = false;
 
     cs.readScore('i"Fire" 0 1')
 
@@ -420,8 +512,6 @@ function mousePressed()
             }
     }
 }
-
-
 function touchStart() 
 {
   screenTouch = true;
