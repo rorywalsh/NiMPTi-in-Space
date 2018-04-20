@@ -137,11 +137,11 @@ instr MainInstrument
     kGain5 chnget "voice5vol"
     kGain5 port kGain5, 1   
 
-    a1 oscili gaEnv1*kGain1, cpsmidinn(kNote1+chnget:k("voice1transp"));, 2
-    a2 oscili gaEnv2*kGain2, cpsmidinn(kNote2+chnget:k("voice2transp"));, 1
-    a3 oscili gaEnv3*kGain3, cpsmidinn(kNote3+chnget:k("voice3transp"));, 1
-    a4 oscili gaEnv4*kGain4, cpsmidinn(kNote4+chnget:k("voice4transp"));, 1
-    a5 oscili gaEnv5*kGain5, cpsmidinn(kNote5+chnget:k("voice5transp"));, 1
+    a1 oscili gaEnv1*kGain1, cpsmidinn(kNote1+chnget:k("voice1transp")), 2
+    a2 oscili gaEnv2*kGain2, cpsmidinn(kNote2+chnget:k("voice2transp")), 1
+    a3 oscili gaEnv3*kGain3, cpsmidinn(kNote3+chnget:k("voice3transp")), 1
+    a4 oscili gaEnv4*kGain4, cpsmidinn(kNote4+chnget:k("voice4transp")), 1
+    a5 oscili gaEnv5*kGain5, cpsmidinn(kNote5+chnget:k("voice5transp")), 1
     aMix = a1+a2+a3+a4+a5
     outs aMix*.2, aMix*.2
 
@@ -319,10 +319,10 @@ instr Synth
     endif
 
     a1 oscili .25*gaEnv1, cpsmidinn(kNote1+chnget:k("transp1")), 2
-    a2 oscili .25*gaEnv2, cpsmidinn(kNote2+chnget:k("transp2")), 1
-    a3 oscili .25*gaEnv3, cpsmidinn(kNote3+chnget:k("transp3")), 1
-    a4 oscili .25*gaEnv4, cpsmidinn(kNote4+chnget:k("transp4")), 1
-    a5 oscili .25*gaEnv5, cpsmidinn(kNote5+chnget:k("transp5")), 1
+    a2 oscili .25*gaEnv2, cpsmidinn(kNote2+chnget:k("transp2")), 2
+    a3 oscili .25*gaEnv3, cpsmidinn(kNote3+chnget:k("transp3")), 3
+    a4 oscili .25*gaEnv4, cpsmidinn(kNote4+chnget:k("transp4")), 3
+    a5 oscili .25*gaEnv5, cpsmidinn(kNote5+chnget:k("transp5")), 2
     aMix = a1+a2+a3+a4+a5
     outs aMix*.2, aMix*.2
 endin
@@ -365,7 +365,7 @@ endin
 f0 z
 f1 0 4096 7 0.001 196 1 3900 0.001
 f2 0 8 10 1 1
-f3 0 1024 10 1 1
+f3 0 16 10 1 0 1 0 1
 f4 0 2 2 1 0
 
 ;                  p3      p4      p5            p6      p7     p8  p9
