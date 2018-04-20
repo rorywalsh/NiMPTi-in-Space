@@ -403,6 +403,20 @@ function destroyStar(index, type)
                 else
                     cs.setControlChannel('transp'+String(voice), random()>.5 ? 7 : -7);
             }
+
+ 
+            if(score%20 == 0) 
+            {
+                voice = int(random(1, 5));
+                for(i = 0; i < 5 ; i++)
+                {
+                    if( voice == i )
+                        cs.setControlChannel('voice'+String(voice)+'vol', 0);
+                    else
+                        cs.setControlChannel('voice'+String(voice)+'vol', 0.2);
+                }
+
+            }           
         }
         
         enemiesKilled++;    
