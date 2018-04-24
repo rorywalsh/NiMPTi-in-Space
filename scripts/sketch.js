@@ -74,70 +74,12 @@ function draw()
 
 }
 
-function drawIntroScreen()
-{
-    
-    textSize(30);
-    strokeWeight(0);
-    fill(255);
-    
-    if(introTimer<300)
-        typeTextBox(width / 2 - 300, height / 2, 600, 200, 20, LEFT, color(255, 255, 255), "NiMPTI is an intergalactic garbage collector whose mission is to rid the virtual file space universe of bad programmers. ");
-    else if(introTimer>300 && introTimer < 600 )
-        typeTextBox(width / 2 - 300, height / 2, 600, 200, 20, LEFT, color(255, 255, 255), "He has been tasked with freeing bytes of memory that haven't been released by their host programs.");
-    else if(introTimer>600 && introTimer<900)
-        typeTextBox(width / 2 - 300, height / 2, 600, 200, 20, LEFT, color(255, 255, 255), "Whilst freeing memory he must also battle the programmers who are responsible who send their poorly programmed AI spaceship clones to destroy NiMPTi.");
-    else
-        typeTextBox(width / 2 - 300, height / 3, 600, 200, 20, LEFT, color(255, 255, 255), "It's up to NiMPTi to destroy all the poorly programmed clones and free the virtual file space galaxy of bad programmers for once and for all! ");
-            //    // 
-    
-
-    introTimer++;
-
-    if(introTimer<900)
-    {
-        if(introTimer%300 == 0)
-            typeIndex = 0;
-    }
-    else
-    {
-        background(0);
-        text("Press space to play", width / 2, height / 1.5);
-
-        textSize(25);
-        text("Use the arrow buttons or WASD keys to move.", width / 2, height / 1.5+ 45);
-        text("Press spacebar or click a mouse button to fire", width / 2, height / 1.5+ 70)
-    }
-
-}
-
-//type text into a box
-function typeTextBox(x, y, textWidth, textHeight, fontSize, align, col, str)
-{
-    background(0);
-  frameCount++; 
-  if(frameCount%2==0)
-      typeIndex++;
-  if(typeIndex<str.length)
-  {     
-    fill(0);
-    rect(x-10, y-10, textWidth+20, textHeight+20);
-    textAlign(align);
-    fill(col);
-    textSize(fontSize);
-    var subString = str.substring(0, typeIndex);
-    text(subString, x, y, textWidth, textHeight);
-    cs.setControlChannel("characterChanged", random(100));
-  } 
-}
 
 function drawScene()
 {
     if(gameOver==true)
     {
         fill(0, 0, 0, 100);
-        //rect(-windowWidth, -windowHeight, windowWidth*2, windowHeight*2*closingBlinds);
-
         if(closingBlinds>1)
         {            
             fill(255);
@@ -210,7 +152,7 @@ function drawScene()
             }        
         }
         
-        if (mouseIsPressed || screenTouch)
+        if (mouseIsPressed || screenTouch || keyIsDown(32))
         {
             stroke(100, 100, 100);
             strokeWeight(8);
@@ -386,7 +328,7 @@ function destroyStar(index, type)
             if(score%7 == 0) 
             {
                 var tempi = [2, 4, 8, 16];
-                var tempo = int(random(0, 2));
+                var tempo = int(random(0, 3));
                 var newTempo = tempi[tempo];
                 voice = int(random(1, 5));
                 if(voice==4)
@@ -394,7 +336,7 @@ function destroyStar(index, type)
                 cs.setControlChannel('voice'+String(voice)+'Freq', newTempo);
             }
 
-            if(score%15 == 0) 
+            if(score%10 == 0) 
             {
                 voice = int(random(1, 5));
                 transFactor = random(1, 5);
@@ -405,7 +347,7 @@ function destroyStar(index, type)
             }
 
  
-            if(score%20 == 0) 
+            if(score%8 == 0) 
             {
                 voice = int(random(1, 5));
                 for(i = 0; i < 5 ; i++)
@@ -483,7 +425,7 @@ function keyPressed()
 function keyReleased()
 {
     movedLeft = 0;
-    moveRight = 0;
+    movedRight = 0;
 }
 
 function mousePressed()
