@@ -30,7 +30,7 @@ function setup()
 
 function playGame()
 {
-    window.open("https://github.com/rorywalsh/NiMPTi-in-Space/blob/master/NiMPTiInSpace.html", "_self"); 
+    window.open("https://rorywalsh.github.io/NiMPTi-in-Space/NiMPTiInSpace.html", "_self"); 
 }
 
 
