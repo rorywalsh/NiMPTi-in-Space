@@ -30,7 +30,7 @@ function setup()
 
 function playGame()
 {
-    window.open("https://www.w3schools.com", "_self"); 
+    window.open("https://rorywalsh.github.io/NiMPTi-in-space/NiMPTiInSpace.html", "_self"); 
 }
 
 
