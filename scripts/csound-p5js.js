@@ -29,11 +29,11 @@ function onRuntimeInitialized()
         cs.setControlChannel("voice3vol", 0);  
         cs.setControlChannel("voice4vol", 0); 
         cs.setControlChannel("voice5vol", 0);  
-        cs.setControlChannel("voice1table", 1);
-        cs.setControlChannel("voice2table", 1);
-        cs.setControlChannel("voice3table", 1);
-        cs.setControlChannel("voice4table", 1);
-        cs.setControlChannel("voice5table", 1);
+        cs.setControlChannel("voice1table", 99);
+        cs.setControlChannel("voice2table", 98);
+        cs.setControlChannel("voice3table", 97);
+        cs.setControlChannel("voice4table", 95);
+        cs.setControlChannel("voice5table", 96);
         cs.setControlChannel("voice1bit", 8);  
         cs.setControlChannel("voice2bit", 8);  
         cs.setControlChannel("voice3bit", 8);  
@@ -49,11 +49,11 @@ function onRuntimeInitialized()
         cs.setControlChannel("voice3transp", 0);
         cs.setControlChannel("voice4transp", 0);
         cs.setControlChannel("voice5transp", 0);
-        cs.setControlChannel("voice1Freq", 4);
-        cs.setControlChannel("voice2Freq", 2);
-        cs.setControlChannel("voice3Freq", 4);
-        cs.setControlChannel("voice4Freq", 16);
-        cs.setControlChannel("voice5Freq", 4);
+        cs.setControlChannel("voice1freq", 4);
+        cs.setControlChannel("voice2freq", 2);
+        cs.setControlChannel("voice3freq", 4);
+        cs.setControlChannel("voice4freq", 16);
+        cs.setControlChannel("voice5freq", 4);
   
         cs.readScore("f0 z");
         CSOUND_AUDIO_CONTEXT.resume();

@@ -54,6 +54,10 @@ gaEnv1, gaEnv2, gaEnv3, gaEnv4, gaEnv5 init 0
 ;-------------------------------------------------------
 ; simple drum sequencer - 
 instr MainInstrument
+    if chnget:k("turnoff")>0 then
+        turnoff
+    endif
+
     kVol chnget "drumVol"
     kBeat init 0
     kMasterClock init 0
@@ -86,34 +90,55 @@ instr MainInstrument
         endif
 
         ;synth melodies
-        if kMasterClock%chnget:k("voice1Freq") == 0 then
-            kNote1 tab kIndex1, 99
+        if kMasterClock%chnget:k("voice1freq") == 0 then
+            if(chnget:k("voice1table")==99) then
+                kNote1 tab kIndex1, 99
+            else
+                kNote1 tab kIndex1, 200
+            endif
             kIndex1 = (kIndex1==15 ? 0 : kIndex1+1)
-            event "i", "Env", 0, 1/chnget:k("voice1Freq"), 1
+            event "i", "Env", 0, 1/chnget:k("voice1freq"), 1
         endif
 	
-        if kMasterClock%chnget:k("voice2Freq") == 0 then
-            kNote2 tab kIndex2, 98
+        if kMasterClock%chnget:k("voice2freq") == 0 then
+            if(chnget:k("voice2table")==98) then
+                kNote2 tab kIndex1, 98
+            else
+                kNote2 tab kIndex1, 201
+            endif
             kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
             ;en is controlled by oscillator
         endif
 
-        if kMasterClock%chnget:k("voice3Freq") == 0 then
-            kNote3 tab 15-kIndex3, 97 	;moves backwards
+        if kMasterClock%chnget:k("voice3freq") == 0 then
+            if(chnget:k("voice3table")==97) then
+                kNote3 tab 15-kIndex3, 97
+            else
+                kNote3 tab 15-kIndex3, 202
+            endif
+
             kIndex3 = (kIndex3==15 ? 0 : kIndex3+1)
-            event "i", "Env", 0, 1/chnget:k("voice3Freq"), 3, 8
+            event "i", "Env", 0, 1/chnget:k("voice3freq"), 3, 8
         endif
         
-        if kMasterClock%chnget:k("voice4Freq") == 0  then
-            kNote4 tab kIndex4, 95
+        if kMasterClock%chnget:k("voice4freq") == 0  then
+            if(chnget:k("voice4table")==95) then
+                kNote4 tab kIndex4, 95
+            else
+                kNote4 tab kIndex4, 203
+            endif
             kIndex4 = (kIndex4==15 ? 0 : kIndex4+1)
             gaEnv4 = .5
         endif
 
-        if kMasterClock%chnget:k("voice5Freq") == 0  then
-            kNote5 tab kIndex5, 98
+        if kMasterClock%chnget:k("voice5freq") == 0  then
+            if(chnget:k("voice3table")==96) then
+                kNote5 tab kIndex4, 96
+            else
+                kNote5 tab kIndex4, 204
+            endif
             kIndex5 = (kIndex5==15 ? 0 : kIndex5+1)
-            event "i", "Env", 0, 1/chnget:k("voice5Freq"), 5
+            event "i", "Env", 0, 1/chnget:k("voice5freq"), 5
         endif
 	
         kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
@@ -179,15 +204,20 @@ endin
 instr 3
     if changed(chnget:k("voice1change"))==1 then
         event "i", "ShuffleNotes", 0, 1, 99
+        event "i", "ShuffleNotes", 0, 1, 200
         printks "Hello", 0
     elseif changed(chnget:k("voice2change"))==1 then
         event "i", "ShuffleNotes", 0, 1, 98
+        event "i", "ShuffleNotes", 0, 1, 201
     elseif changed(chnget:k("voice3change"))==1 then
         event "i", "ShuffleNotes", 0, 1, 97
+        event "i", "ShuffleNotes", 0, 1, 202
     elseif changed(chnget:k("voice4change"))==1 then
         event "i", "ShuffleNotes", 0, 1, 95
+        event "i", "ShuffleNotes", 0, 1, 203
     elseif changed(chnget:k("voice5change"))==1 then
         event "i", "ShuffleNotes", 0, 1, 96
+        event "i", "ShuffleNotes", 0, 1, 204
     endif
 endin
 
@@ -276,57 +306,6 @@ if iActive<2 then
 endif
 endin
 
-;-----------------------------------------------
-; really simple synth with 5 voices
-;-----------------------------------------------
-instr Synth
-    kMasterClock init 0
-    a1, a2, a3, a4, a5 init 0
-    kIndex1, kIndex2, kIndex3, kIndex4, kIndex5 init 0
-    if metro(16) == 1 then
-
-        if(kMasterClock%4 == 0) then
-            kNote1 tab kIndex1, 99
-            kIndex1 = (kIndex1==15 ? 0 : kIndex1+1)
-            event "i", "Env", 0, 1/4, 1
-        endif
-	
-        if(kMasterClock%2 == 0) then
-            kNote2 tab kIndex2, 98
-            kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
-            event "i", "Env", 0, 1/8, 2
-        endif
-
-        if(kMasterClock%4 == 0) then
-            kNote3 tab 15-kIndex3, 97 	;moves backwards
-            kIndex3 = (kIndex3==15 ? 0 : kIndex3+1)
-            event "i", "Env", 0, 1/4, 3, 8
-        endif
-        
-        if(kMasterClock%16 == 0) then
-            kNote4 tab kIndex4, 95
-            kIndex4 = (kIndex4==15 ? 0 : kIndex4+1)
-            gaEnv4 = .5
-        endif
-
-        if(kMasterClock%4 == 0) then
-            kNote5 tab kIndex5, 98
-            kIndex5 = (kIndex5==15 ? 0 : kIndex5+1)
-            event "i", "Env", 0, 1/4, 5
-        endif
-	
-        kMasterClock = (kMasterClock==15 ? 0 : kMasterClock+1)
-    endif
-
-    a1 oscili .25*gaEnv1, cpsmidinn(kNote1+chnget:k("transp1")), 2
-    a2 oscili .25*gaEnv2, cpsmidinn(kNote2+chnget:k("transp2")), 2
-    a3 oscili .25*gaEnv3, cpsmidinn(kNote3+chnget:k("transp3")), 3
-    a4 oscili .25*gaEnv4, cpsmidinn(kNote4+chnget:k("transp4")), 3
-    a5 oscili .25*gaEnv5, cpsmidinn(kNote5+chnget:k("transp5")), 2
-    aMix = a1+a2+a3+a4+a5
-    outs aMix*.2, aMix*.2
-endin
-
 instr Env
     if p5 > 0 then
         aPhasor phasor p5
@@ -356,8 +335,7 @@ endin
 
 ;-------------------------------------------------------------------------------
 instr 20000
-;a1, a2 monitor
-;fout "/Users/walshr/sourcecode/CsoundUnity/Examples/SimpleDemoOSX3/Assets/Scripts/output.wav", 4, a1
+chnset 1, "turnoff"
 endin
 
 </CsInstruments>
@@ -383,19 +361,19 @@ f96 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f95 0 16  -2 0 0 60 57 69 72 79 0 0 0 60 57 69 72 79 0
 
 
+f200 0 16 -2 60 0   64  64  0   69  0   72  0   60  0   48  0   60  69  0   60  0
+f201 0 16 -2 60 60  65  0   0   0   67  0   69  0   72  0   0   0   48  36  36  36
+f202 0 16 -2 60 0   64  64  0   69  0   72  0   60  0   48  0   60  69  0   60  0
+f203 0 16 -2 60 72  36  72  36  0   36  48  57  60  36  0   0   0   72  0   60  0
+f204 0 16 -2 60 0   0   60  50  0  36   60  48  0   0   60  69  0   60  0   0   0
 
-
-
-i20000 0 z
+;i20000 0 z
 i2 0 .1
 i3 0 z
 i4 0 z
 i5 0 z
 i10 0 z
 i"MainInstrument"	0	z
-;i"Synth" 	0 	z
-
-
 
 </CsScore>
 </CsoundSynthesizer>

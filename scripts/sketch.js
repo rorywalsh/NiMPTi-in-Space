@@ -4,7 +4,7 @@ var stars = [];
 var enemies = [];
 var backgroundStars = [];
 var centreX, centreY;
-var score = 0, lives = 5, gameOver = false, score = 0, enemiesKilled = 0;
+var score = 0, lives = 5, gameOver = false, score = 0, enemiesKilled = 0, memoryLevel = 100;
 var trackOne = 0, trackTwo = 0, trackThree = 0, trackFour = 0, trackFive = 0;
 var closingBlinds = 0;
 var offX = 0, offY = 0;
@@ -26,20 +26,24 @@ var introTimer =0  ;
 // Setup our canvas and create our stars
 function setup()
 {
-    for (i = 0; i < 100; i++)
-        stars.push(new Star("RegularStar"));
-
-    for (i = 0; i < 100; i++)
-        backgroundStars.push(new BackgroundStar());
-
     centreX = windowWidth / 2;
     centreY = windowHeight / 2;
     var cans = createCanvas(windowWidth, windowHeight);
+    createScene();
     cans.style('display', 'block');
     textAlign(CENTER);
     background(0);
 }
 
+function createScene()
+{
+    for (i = 0; i < 100; i++)
+    stars.push(new Star("RegularStar"));
+
+    for (i = 0; i < 100; i++)
+    backgroundStars.push(new BackgroundStar());
+
+}
 //===========================================================================================
 // This function calls the main drawing function during gameplay, or the "loading Csound"
 // message when the Csound object is loading
@@ -79,22 +83,26 @@ function drawScene()
 {
     if(gameOver==true)
     {
-        fill(0, 0, 0, 100);
-        if(closingBlinds>1)
-        {            
-            fill(255);
+            stroke(0);
+            fill(0);
+            rect(windowWidth*.4, windowHeight*.66, 500, 200);
             stroke(255);
+            fill(255);
             textSize(80);
-            text("Game Over", windowWidth/2, windowHeight/2);
+            text("Game Over", windowWidth/2, windowHeight*.7);
             textSize(25)
-            text("Tap screen/mouse to start again",  windowWidth/2, windowHeight/2 + 50);
+            text("Tap screen/mouse to start again",  windowWidth/2, windowHeight*.7 + 50);
             resetLevel();
 
             if(mouseIsPressed)
+            {
                 gameOver=false;
-        }
+                cs.setControlChannel("turnoff", 0); 
+                cs.readScore('i"MainInstrument"	0 z');
+                createScene();
+                memoryLevel = 100;
+            }
 
-        closingBlinds+=0.1;
     }
     else
     {
@@ -146,9 +154,8 @@ function drawScene()
                 // remove it from list
                 enemies.splice(i, 1);
                 impact = 1;
-                lives--;
-                if(lives == 0)
-                    gameOver = true;              
+                memoryLevel-=10;
+                lives--;          
             }        
         }
         
@@ -180,7 +187,9 @@ function drawScene()
                 movedLeft+=-.1;
             }
                 
-               
+            if(keyIsPressed===true)
+                memoryLevel-=0.1;
+
             if (keyIsDown(RIGHT_ARROW) || keyIsDown(68))
             {
                 rotate(constrain(movedRight, 0, 4));
@@ -198,12 +207,21 @@ function drawScene()
             strokeWeight(1);
             fill(255);
             stroke(255);
-            text("Lives Remaining: " + String(lives), 3 + shake, 60 + shake);
+            textAlign(CENTER);
+            //text("Lives Remaining: " + String(lives), 3 + shake, 60 + shake);
             text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75 + shake);
             text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90 + shake);
             text("Score: " + String(score), 3 + shake, 105 + shake);
+            textAlign(RIGHT);
+            text("Memory:", -10+shake, 130);
+
+            fill(150, 150, 150, 255);
+            strokeWeight(0)
+            rect(-10+shake, 120, 70*(getMemoryLevel()/100), 15);
             translate(0,0)
             angleMode(RADIANS);
+
+
         pop();
 
         if(showExplosion<50)
@@ -227,6 +245,24 @@ function drawScene()
         }
     }   
 
+}
+
+function getMemoryLevel()
+{
+    if(memoryLevel<0)
+    {
+        gameOver = true;
+
+        for ( i = 0 ; i < enemies.length ; i++)
+            enemies.pop(i);
+        for ( i = 0 ; i < stars.length ; i++)
+            stars.pop(i);
+
+        createScene();
+
+        cs.setControlChannel("turnoff", 1); 
+    } 
+    return memoryLevel;
 }
 
 function explosion(x, y, radius1, radius2, npoints) 
@@ -307,76 +343,95 @@ function createStar(type, colour)
 
 function destroyStar(index, type)
 {
-    cs.readScore('i"Explosion" 0 1')
+    cs.readScore('i"Explosion" 0 1');
+
     if(type == "MusicalStar") 
     {
         stars.splice(index, 1);
-        score++;
+        memoryLevel = memoryLevel < 100 ? memoryLevel+7.5 : 100;
     }
     else if(type == "Enemy")
     {
         enemies.splice(index, 1);
-        
-        if(score>36)
+    }  
+
+    if(score>36)
+    {
+        if(score%5 == 0) 
         {
-            if(score%5 == 0) 
-            {
-                voice = int(random(1, 5));
-                cs.setControlChannel('voice'+String(voice)+'change', random(100));
-            }
-
-            if(score%7 == 0) 
-            {
-                var tempi = [2, 4, 8, 16];
-                var tempo = int(random(0, 3));
-                var newTempo = tempi[tempo];
-                voice = int(random(1, 5));
-                if(voice==4)
-                    newTempo = tempi[tempo]+8;
-                cs.setControlChannel('voice'+String(voice)+'Freq', newTempo);
-            }
-
-            if(score%10 == 0) 
-            {
-                voice = int(random(1, 5));
-                transFactor = random(1, 5);
-                if(transFactor<4)
-                    cs.setControlChannel('transp'+String(voice), random()>.5 ? 12 : -12);
-                else
-                    cs.setControlChannel('transp'+String(voice), random()>.5 ? 7 : -7);
-            }
-
- 
-            if(score%8 == 0) 
-            {
-                voice = int(random(1, 5));
-                for(i = 0; i < 5 ; i++)
-                {
-                    if( voice == i )
-                        cs.setControlChannel('voice'+String(voice)+'vol', 0);
-                    else
-                        cs.setControlChannel('voice'+String(voice)+'vol', 0.2);
-                }
-
-            }           
+            voice = int(random(1, 5));
+            cs.setControlChannel('voice'+String(voice)+'change', random(100));
         }
-        
-        enemiesKilled++;    
-        score++;
-    }
 
+        if(score%7 == 0) 
+        {
+            var tempi = [2, 4, 8, 16];
+            var tempo = int(random(0, 3));
+            var newTempo = tempi[tempo];
+            voice = int(random(1, 5));    
+            cs.setControlChannel("voice5table", 204);
+            if(voice==4)
+                newTempo = tempi[tempo]+8;
+            cs.setControlChannel('voice'+String(voice)+'freq', newTempo);
+        }
+
+        if(score%10 == 0) 
+        {
+            voice = int(random(1, 5));
+            transFactor = random(1, 5);
+            if(transFactor<4)
+                cs.setControlChannel('transp'+String(voice), random()>.5 ? 12 : -12);
+            else
+                cs.setControlChannel('transp'+String(voice), random()>.5 ? 7 : -7);
+        }
+
+
+        if(score%8 == 0) 
+        {
+            voice = int(random(1, 5));
+            for(i = 0; i < 5 ; i++)
+            {
+                if( voice == i )
+                    cs.setControlChannel('voice'+String(voice)+'vol', 0);
+                else
+                    cs.setControlChannel('voice'+String(voice)+'vol', 0.2);
+            }
+
+        }   
+        
+        var toggleTable = random(0, 1);
+        if(score%12 == 0)
+            cs.setControlChannel("voice1table", toggleTable<.5 ? 99 : 200);    
+        else if(score%7 == 0)
+            cs.setControlChannel("voice2table", toggleTable<.5 ? 98 : 201);   
+        else if(score%14 == 0)
+            cs.setControlChannel("voice3table", toggleTable<.5 ? 97 : 202);   
+        else if(score%6 == 0)
+            cs.setControlChannel("voice4table", toggleTable<.5 ? 95 : 203);   
+        else if(score%13 == 0)
+            cs.setControlChannel("voice5table", toggleTable<.5 ? 96 : 204);   
+    }
+    
+    enemiesKilled++;   
+
+    //memoryLevel = memoryLevel < 100 ? memoryLevel+5 : 100; 
+
+    
     if(score == 2)
         cs.setControlChannel("voice1vol", .2);
-    if(score == 6)
+    else if(score == 6)
         cs.setControlChannel("voice2vol", .2);
-    if(score == 12)
+    else if(score == 12)
         cs.setControlChannel("voice3vol", .2);
-    if(score == 18)
+    else if(score == 18)
         cs.setControlChannel("voice4vol", .2);
-    if(score == 24)
+    else if(score == 24)
         cs.setControlChannel("voice5vol", .2);
 
     showExplosion = 0;
+
+    score++;
+    
 }
 
 //===========================================================================================
@@ -436,7 +491,11 @@ function mousePressed()
 function mousePressAndSpacebar()
 {
     if(gameOver)
+    {
+        cs.setControlChannel("tunoff", 0);
         gameOver = false;
+
+    }
     
     if(showIntroScreen)
         showIntroScreen = false;
