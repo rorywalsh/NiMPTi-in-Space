@@ -58,6 +58,7 @@ instr MainInstrument
         turnoff
     endif
 
+sdfsdf
     kVol chnget "drumVol"
     kBeat init 0
     kMasterClock init 0
