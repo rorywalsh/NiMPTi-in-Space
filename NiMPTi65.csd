@@ -252,7 +252,7 @@ endin
 instr Explosion
     a1 randi 1, 1500
     a3 oscil 1, 100, -1
-    a2 expon .05, p3, .001
+    a2 expon .1, p3, .001
     outs a2*a1*a3, a2*a1*a3
 endin
 
@@ -260,7 +260,7 @@ instr Fire
     a1 expon 500, p3, 0.001 
     a2 oscili 10, a1, -1
     aclip clip a2*a1, 2, .3
-    outs aclip*.05, aclip*.05
+    outs aclip*.1, aclip*.1
 endin
 ;---------------------------------------------
 ; extremly simple set of drums
