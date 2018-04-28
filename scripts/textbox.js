@@ -48,7 +48,7 @@ class AnimatedTextBox
           {
             if(this.charIndex<this.text.length)
             {
-              this.osc.amp(.3);
+              this.osc.amp(.1);
               this.osc.freq(random(100, 800));
             }
             else

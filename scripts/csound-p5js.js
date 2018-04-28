@@ -23,8 +23,8 @@ function onRuntimeInitialized()
         cs = new CsoundObj();
         cs.compileCSD(txt);
         cs.start();
-        cs.setControlChannel("drumVol", 10);
-        cs.setControlChannel("voice1vol", 0.2);
+        cs.setControlChannel("drumVol", 1);
+        cs.setControlChannel("voice1vol", 0.4);
         cs.setControlChannel("voice2vol", 0);  
         cs.setControlChannel("voice3vol", 0);  
         cs.setControlChannel("voice4vol", 0); 
