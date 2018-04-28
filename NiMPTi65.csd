@@ -71,19 +71,19 @@ instr MainInstrument
         if kMasterClock%2 == 0 then
             kDrum1 tab kBeat, 100	; read value from tables, 1 indicates a hit
             if kDrum1 ==1 then
-                event "i", 1000, 0, .25, .25
+                event "i", 1000, 0, .25, kVol
             endif
             kDrum2 tab kBeat, 101	
             if kDrum2 ==1 then
-                event "i", 2000, 0, 1, 100, giWaveshape1, .25
+                event "i", 2000, 0, 1, 100, giWaveshape1, kVol
             endif
             kDrum3 tab kBeat, 102
             if kDrum3 ==1 then
-                event "i", 3000, 0, .25, 50, giWaveshape1, .25
+                event "i", 3000, 0, .25, 50, giWaveshape1, kVol
             endif
             kDrum4 tab kBeat, 103
             if kDrum4 ==1 then
-                event "i", 4000, 0, .1, 100, giWaveshape1, .25
+                event "i", 4000, 0, .1, 100, giWaveshape1, kVol
             endif
             kBeat = (kBeat==15 ? 0 : kBeat+1)
         endif
@@ -166,7 +166,7 @@ instr MainInstrument
     a4 oscili gaEnv4*kGain4, cpsmidinn(kNote4+chnget:k("voice4transp")), 1
     a5 oscili gaEnv5*kGain5, cpsmidinn(kNote5+chnget:k("voice5transp")), 1
     aMix = a1+a2+a3+a4+a5
-    outs aMix*.5, aMix*.5
+    outs aMix, aMix
 
     kTextUpdated chnget "characterChanged"
     kRandomFreqForText randh 50, 10
