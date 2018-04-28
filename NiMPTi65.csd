@@ -66,9 +66,8 @@ instr MainInstrument
 
     gaEnv2 oscili 1, 2, 1
 
-    if metro(16)==1 then		; in each new beat enter block
+    if metro(16)==1 then		; on each new beat enter block
 
-        ;printk2 kMasterClock
         if kMasterClock%2 == 0 then
             kDrum1 tab kBeat, 100	; read value from tables, 1 indicates a hit
             if kDrum1 ==1 then
@@ -107,7 +106,6 @@ instr MainInstrument
                 kNote2 tab kIndex1, 201
             endif
             kIndex2 = (kIndex2==15 ? 0 : kIndex2+1)
-            ;en is controlled by oscillator
         endif
 
         if kMasterClock%chnget:k("voice3freq") == 0 then
@@ -184,12 +182,12 @@ endin
 ;---------------------------------------------
 instr 2
     iCnt init 0		; iCnt will be our table index going from 0-15
-    until iCnt>15 do	; until iCnt get to 15, enter this block 
-        iVal1 random 0, 10			; create random values between 0 and 10.
-        tabw_i (iVal1>2 ? 0 : 1), iCnt, 100	; If value is above 5 enter a 'hit'(1) to the table
-        iVal2 random 0, 10			; at index iCnt, if less than 5 enter a 0
-        tabw_i (iVal2>2 ? 0 : 1), iCnt, 101	; Changing the 2 to higher number between 
-        iVal3 random 0, 10			; will increase the chances of a 'hit' 
+    until iCnt>15 do	                        ; until iCnt get to 15, enter this block 
+        iVal1 random 0, 10			            ; create random values between 0 and 10.
+        tabw_i (iVal1>2 ? 0 : 1), iCnt, 100	    ; If value is above 5 enter a 'hit'(1) to the table
+        iVal2 random 0, 10			            ; at index iCnt, if less than 5 enter a 0
+        tabw_i (iVal2>2 ? 0 : 1), iCnt, 101	    ; Changing the 2 to higher number between 
+        iVal3 random 0, 10			            ; will increase the chances of a 'hit' 
         tabw_i (iVal3>2 ? 0 : 1), iCnt, 102
         iVal4 random 0, 10	
         tabw_i (iVal4>2 ? 0 : 1), iCnt, 103
@@ -346,20 +344,11 @@ f2 0 8 10 1 1
 f3 0 16 10 1 0 1 0 1
 f4 0 2 2 1 0
 
-;                  p3      p4      p5            p6      p7     p8  p9
-; ;pName		start	dur		freq	note table	voice	transp	env table
-; i"Synth" 	0 		3600	4 		99 			1		1		1   2 ; freq 1/4 4 notes a second
-; i"Synth" 	0 		3600 	2 		98			2		1		1   1 ; freq 1/8 8 notes a second
-; i"Synth" 	0 		3600 	-8 		97			3		2		1   1 ; freq 1/8 2 notes a second
-; i"Synth" 	0 		3600 	8 		95			4		1		2   1 ; freq 1/8 1 notes a second - table size 8
-; i"Synth" 	0 		3600 	4 		96			5		2		1   1 ; freq 1/4 4 notes a second 
 f99 0 16 -2 60 0 65 65 0 0 0 60 65 60 48 48 60 67 65 65 0 0
 f98 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f97 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
 f96 0 16 -2 60 64 65 64 0 0 0 64 65 60 36 36 60 67 65 65 0 0
-;0 0 7.0 6.09 7.09 8 8.07 0 0 
 f95 0 16  -2 0 0 60 57 69 72 79 0 0 0 60 57 69 72 79 0
-
 
 f200 0 16 -2 60 0   64  64  0   69  0   72  0   60  0   48  0   60  69  0   60  0
 f201 0 16 -2 60 60  65  0   0   0   67  0   69  0   72  0   0   0   48  36  36  36
@@ -367,7 +356,6 @@ f202 0 16 -2 60 0   64  64  0   69  0   72  0   60  0   48  0   60  69  0   60  
 f203 0 16 -2 60 72  36  72  36  0   36  48  57  60  36  0   0   0   72  0   60  0
 f204 0 16 -2 60 0   0   60  50  0  36   60  48  0   0   60  69  0   60  0   0   0
 
-;i20000 0 z
 i2 0 .1
 i3 0 z
 i4 0 z

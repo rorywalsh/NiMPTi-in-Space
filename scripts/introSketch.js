@@ -4,17 +4,24 @@ var backgroundStars = [];
 var centreX, centreY;
 var textBox1, textBox2, textBox3;
 var button;
+
 // Setup our canvas and create our stars
 function setup()
 {
-    textBox1 =  new AnimatedTextBox(-300, -30, 600, 500, 20, "LEFT", color(255, 255, 255, 255), "NiMPTI is an intergalactic garbage collector whose mission is to rid the virtual file space universe of bad programmers. He survives by freeing memory that hasn't been released by host programs.");
-    textBox1.startTime = 2;
+    // osc = new p5.Oscillator();
+    // osc.setType('sine');
+    // osc.start();
+    // osc.freq(0);
+    // osc.amp(.5);
 
-    textBox2 =  new AnimatedTextBox(-300, 100, 600, 500, 20, "LEFT", color(255, 255, 255, 255), "Not only does the acquired memory keep his ship in orbit, it also powers his on-board radio....");
-    textBox2.startTime = 15;
+    textBox1 =  new AnimatedTextBox(-300, -90, 600, 500, 20, "LEFT", color(255, 255, 255, 255), "NiMPTI is an intergalactic garbage collector whose mission is to rid the virtual file space universe of bad programmers. He survives by freeing memory that hasn't been released by host programs...");
+    textBox1.startTime = 1;
 
-    textBox3 =  new AnimatedTextBox(-300, 200, 600, 500, 20, "LEFT", color(255, 255, 255, 255), "NiMPTi can survive in the most hostile environments in the virtual uni-world, but he can't survive without his choons!");
-    textBox3.startTime = 26;
+    textBox2 =  new AnimatedTextBox(-300, 30, 600, 500, 20, "LEFT", color(255, 255, 255, 255), "Not only does the acquired memory keep his ship in orbit, it also powers his on-board radio....");
+    textBox2.startTime = 22;
+
+    textBox3 =  new AnimatedTextBox(-300, 130, 600, 500, 20, "LEFT", color(255, 255, 255, 255), "NiMPTi can survive in the most hostile environments in the virtual uni-world, but he can't survive without his choons!");
+    textBox3.startTime = 32;
 
     centreX = windowWidth / 2;
     centreY = windowHeight / 2;
@@ -65,7 +72,6 @@ function draw()
     fill(255);
     textSize(80);
     text("NiMPTi in Space", 0, -200);
-
 
     fill(255);
     textSize(20);

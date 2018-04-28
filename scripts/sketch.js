@@ -20,8 +20,8 @@ var typeIndex = 0;
 var introTimer =0  ;
 
 // Shooting a red plant will increase the volume of track 1
-// Letting a red incoming wobbly plant hit you will decrese the volume of that track. 
-// Same logic applied to all colour plants, but you mst mantain a positive live count or it's game over. 
+// Letting a red incoming wobbly plant hit you will decrease the volume of that track. 
+// Same logic applied to all colour plants, but you mst maintain a positive live count or it's game over. 
 
 // Setup our canvas and create our stars
 function setup()
@@ -51,17 +51,12 @@ function draw()
 {
     if (csoundLoaded)
     {
-        // if(showIntroScreen)
-        //     drawIntroScreen();
-        // else
-        // {
             if (mobileCheck.android)
             {
                 offY = map(accelerationY, -90, 90, -5, 5);
                 offX = map(accelerationX, -90, 90, -5, 5);
             }
             drawScene();
-        // }
     }
     else
     {
@@ -75,7 +70,6 @@ function draw()
             textAlphaSpeed *= -1;
         }
     }
-
 }
 
 
@@ -150,8 +144,7 @@ function drawScene()
                 enemy.y > -100 && enemy.y < 100 &&
                 enemy.radius>145)
             {
-                // if enemy moves in front of player
-                // remove it from list
+                // if enemy hits player remove from list
                 enemies.splice(i, 1);
                 impact = 1;
                 memoryLevel-=10;
@@ -203,12 +196,10 @@ function drawScene()
             line(-30 + shake, 0 + shake, -10 + shake, 0 + shake);
             line(+30 + shake, 0 + shake, +10 + shake, 0 + shake);
             rect(-100 + shake, -100 + shake, 200, 260);
-            // draw on-screen text =========================
             strokeWeight(1);
             fill(255);
             stroke(255);
             textAlign(CENTER);
-            //text("Lives Remaining: " + String(lives), 3 + shake, 60 + shake);
             text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75 + shake);
             text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90 + shake);
             text("Score: " + String(score), 3 + shake, 105 + shake);
@@ -411,10 +402,6 @@ function destroyStar(index, type)
         else if(score%13 == 0)
             cs.setControlChannel("voice5table", toggleTable<.5 ? 96 : 204);   
     }
-    
-    enemiesKilled++;   
-
-    //memoryLevel = memoryLevel < 100 ? memoryLevel+5 : 100; 
 
     
     if(score == 2)
@@ -431,6 +418,7 @@ function destroyStar(index, type)
     showExplosion = 0;
 
     score++;
+    enemiesKilled++;   
     
 }
 
@@ -492,9 +480,8 @@ function mousePressAndSpacebar()
 {
     if(gameOver)
     {
-        cs.setControlChannel("tunoff", 0);
-        gameOver = false;
-
+        var page = window.open("https://rorywalsh.github.io/NiMPTi-in-Space/NiMPTiInSpace.html", "_self"); 
+        page.location.reload();
     }
     
     if(showIntroScreen)
@@ -531,7 +518,6 @@ function touchStart()
 {
   screenTouch = true;
 }
-
 //==================================================================================
 
 function windowResized()

@@ -16,21 +16,22 @@ class AnimatedTextBox
         this.fadeOut = false;
         this.startTime = 0;
         this.secondsPassed = 0;
-
+        this.osc = new p5.Oscillator();
+        this.osc.setType('sine');
+        this.osc.start();
+        this.osc.freq(0);
+        this.osc.amp(0);
     }
 
     animate()
     {
 
-
-      this.secondsPassed = (this.frameCount%int(frameRate())==0 ? this.secondsPassed+1 : this.secondsPassed);
-      this.frameCount++; 
-      if(this.secondsPassed>this.startTime)
+      if(millis()/1000 > this.startTime)
       {
         if(this.frameCount%3==0)
           this.charIndex = (this.charIndex < this.text.length ? this.charIndex+1 : this.text.length);
 
-        if(this.charIndex<this.text.length || this.fadeOut === false)
+        if(this.charIndex<=this.text.length)
         { 
           fill(0,0,0,0);
           rect(this.x-10, this.y-10, this.textWidth+20, this.textHeight+20);
@@ -42,8 +43,21 @@ class AnimatedTextBox
           textSize(this.fontSize);
           this.subString = this.text.substring(0, this.charIndex);
           text(this.subString, this.x, this.y, this.textWidth, this.textHeight);
+
+          if(this.osc)
+          {
+            if(this.charIndex<this.text.length)
+            {
+              this.osc.amp(1);
+              this.osc.freq(random(100, 800));
+            }
+            else
+              this.osc.amp(0);
+            }
         }
       }
+      this.frameCount++; 
     }
+
    
 }
