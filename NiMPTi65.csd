@@ -166,7 +166,7 @@ instr MainInstrument
     a4 oscili gaEnv4*kGain4, cpsmidinn(kNote4+chnget:k("voice4transp")), 1
     a5 oscili gaEnv5*kGain5, cpsmidinn(kNote5+chnget:k("voice5transp")), 1
     aMix = a1+a2+a3+a4+a5
-    outs aMix*.2, aMix*.2
+    outs aMix*.5, aMix*.5
 
     kTextUpdated chnget "characterChanged"
     kRandomFreqForText randh 50, 10

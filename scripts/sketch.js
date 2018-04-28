@@ -385,7 +385,7 @@ function destroyStar(index, type)
                 if( voice == i )
                     cs.setControlChannel('voice'+String(voice)+'vol', 0);
                 else
-                    cs.setControlChannel('voice'+String(voice)+'vol', 0.2);
+                    cs.setControlChannel('voice'+String(voice)+'vol', 0.3);
             }
 
         }   
@@ -405,15 +405,15 @@ function destroyStar(index, type)
 
     
     if(score == 2)
-        cs.setControlChannel("voice1vol", .2);
+        cs.setControlChannel("voice1vol", .3);
     else if(score == 6)
-        cs.setControlChannel("voice2vol", .2);
+        cs.setControlChannel("voice2vol", .3);
     else if(score == 12)
-        cs.setControlChannel("voice3vol", .2);
+        cs.setControlChannel("voice3vol", .3);
     else if(score == 18)
-        cs.setControlChannel("voice4vol", .2);
+        cs.setControlChannel("voice4vol", .3);
     else if(score == 24)
-        cs.setControlChannel("voice5vol", .2);
+        cs.setControlChannel("voice5vol", .3);
 
     showExplosion = 0;
 
