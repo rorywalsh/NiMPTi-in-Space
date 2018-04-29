@@ -55,10 +55,10 @@ function draw()
             {
                 offY = map(accelerationY, -90, 90, -5, 5);
                 offX = map(accelerationX, -90, 90, -5, 5);
-                if(offY > 3 || offY < -3)
+                if(offY > 1 || offY < -1)
                     memoryLevel-=0.1;
-                if(offX > 3 || offX < -3)
-                 memoryLevel-=0.1;
+                if(offX > 1 || offX < -1)
+                    memoryLevel-=0.1;
             }
             drawScene();
     }
@@ -66,13 +66,8 @@ function draw()
     {
         //basic code to indicate Csound is still loading...
         background(0, 0, 0);
-        fill(0, 0, 100, textAlpha);
-        text("...LOADING CSOUND...", width / 2, height / 2);
-        textAlpha += textAlphaSpeed;
-        if (textAlpha > 1 || textAlpha < 0)
-        {
-            textAlphaSpeed *= -1;
-        }
+        fill(255);
+        text("...LOADING...", width / 2, height / 2);
     }
 }
 
