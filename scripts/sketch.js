@@ -26,6 +26,7 @@ var introTimer =0  ;
 // Setup our canvas and create our stars
 function setup()
 {
+    window.screen.lockOrientation('landscape-primary');
     centreX = windowWidth / 2;
     centreY = windowHeight / 2;
     var cans = createCanvas(windowWidth, windowHeight);
