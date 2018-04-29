@@ -65,13 +65,8 @@ function draw()
     {
         //basic code to indicate Csound is still loading...
         background(0, 0, 0);
-        fill(255, 255, 255, textAlpha);
+        fill(255);
         text("...LOADING CSOUND...", width / 2, height / 2);
-        textAlpha += textAlphaSpeed;
-        if (textAlpha > 1 || textAlpha < 0)
-        {
-            textAlphaSpeed *= -1;
-        }
     }
 }
 
