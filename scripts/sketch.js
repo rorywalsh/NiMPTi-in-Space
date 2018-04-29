@@ -17,8 +17,7 @@ var showExplosion = 100;
 var movedLeft = 0, movedRight = 0;
 var showIntroScreen = true;
 var typeIndex = 0;
-var introTimer =0  ;
-window.screen.lockOrientation('landscape-primary');
+var introTimer =0;
 // Shooting a red plant will increase the volume of track 1
 // Letting a red incoming wobbly plant hit you will decrease the volume of that track. 
 // Same logic applied to all colour plants, but you mst maintain a positive live count or it's game over. 
@@ -56,9 +55,9 @@ function draw()
                 offY = map(accelerationY, -90, 90, -5, 5);
                 offX = map(accelerationX, -90, 90, -5, 5);
                 if(int(offY) > 1 || int(offY) < -1)
-                    memoryLevel-=0.1;
+                    memoryLevel-=0.5;
                 if(int(offX) > 1 || int(offX) < -1)
-                    memoryLevel-=0.1;
+                    memoryLevel-=0.5;
             }
             drawScene();
     }

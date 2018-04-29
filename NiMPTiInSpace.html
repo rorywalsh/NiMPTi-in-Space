@@ -12,6 +12,10 @@
     <meta property="og:description" content="Simple game using Csound and p5js" />
   </head>
   <body>
+    <script>
+      var lockOrientation = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
+      lockOrientation("landscape-primary");
+      </script>
     <script src="csound/CsoundObj.js"></script>
     <script src="scripts/csound-p5js.js"></script>
     <script src="scripts/mobileCheck.js"></script>
