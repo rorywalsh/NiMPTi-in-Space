@@ -72,8 +72,9 @@ function draw()
     fill(255);
     textSize(80);
     text("NiMPTi in Space", 0, -200);
-    textSize(18);
-    text("If viewing on Android please use the 'Add to home-screen' option in your browser menu.", 0, -170);
+    textSize(14);
+    text("If viewing on Android please use the 'Add to home-screen' option in your browser", 0, -170);
+    text("menu and then restart from your home screen. Playing in the browser makes NiMPTi very slow :(", 0, -152) 
 
     fill(255);
     textSize(20);
