@@ -51,7 +51,20 @@ if(typeof AudioWorkletNode !== 'undefined' &&
 
       super(context, 'Csound', options);
 
+      this.msgCallback = (msg) => { console.log(msg); }
+
       this.port.start();
+      this.port.onmessage = (event) => {
+        let data = event.data;
+        switch(data[0]) {
+          case "log":
+            this.msgCallback(data[1]);
+            break;
+        default:
+          console.log('[CsoundNode] Invalid Message: "' + event.data);
+        }
+        
+      };
     }
 
   }
@@ -72,11 +85,15 @@ if(typeof AudioWorkletNode !== 'undefined' &&
       this.node.connect(this.audioContext.destination);
     }
 
-    compileCsd(filePath) {
+    writeToFS(filePath, blobData) {
+      this.node.port.postMessage(["writeToFS", filePath, blobData]);
+    }
+
+    compileCSD(filePath) {
       // not sure what to do about file path...
       // need to see what can be accessed in
       // worklet scope
-      this.node.port.postMessage(["compileCsd", filePath]);
+      this.node.port.postMessage(["compileCSD", filePath]);
     }
 
     compileOrc(orcString) {
@@ -131,12 +148,16 @@ if(typeof AudioWorkletNode !== 'undefined' &&
     stop() {
     }
 
+    setMessageCallback(msgCallback) {
+      this.node.msgCallback = msgCallback;
+    }
+
 
     /** Use to asynchronously setup AudioWorklet */
     static importScripts(script_base='./') {
       let actx = CSOUND_AUDIO_CONTEXT;
       return new Promise( (resolve) => {
-        actx.audioWorklet.addModule(script_base + 'libcsound-worklet.base64.js').then(() => {
+        actx.audioWorklet.addModule(script_base + 'libcsound-worklet.wasm.js').then(() => {
         actx.audioWorklet.addModule(script_base + 'libcsound-worklet.js').then(() => {
         actx.audioWorklet.addModule(script_base + 'CsoundProcessor.js').then(() => {
           resolve(); 
@@ -160,6 +181,11 @@ if(typeof AudioWorkletNode !== 'undefined' &&
 
     var WAM = AudioWorkletGlobalScope.WAM;
     var Module = WAM;
+
+    this.msgCallback = (t) => console.log(t);
+
+    WAM["print"] = (t) => this.msgCallback(t);
+    WAM["printErr"] = (t) => this.msgCallback(t);
 
     var that = this;
     var _new = WAM.cwrap('CsoundObj_new', ['number'], null);
@@ -493,6 +519,20 @@ if(typeof AudioWorkletNode !== 'undefined' &&
         _openAudioOut(_self);
     }
 
+
+    this.setMessageCallback = function(msgCallback) {
+      this.msgCallback = msgCallback;
+    }
+
+    this.writeToFS = function (filePath, blobData) {
+
+      let FS = WAM["FS"];
+      let stream = FS.open(filePath, 'w+');
+      let buf = new Uint8Array(blobData)
+      FS.write(stream, buf, 0, buf.length, 0);
+      FS.close(stream);
+    }
+
     }
 
   CsoundObj.loadScript = function (src, callback) {
@@ -511,7 +551,6 @@ if(typeof AudioWorkletNode !== 'undefined' &&
       CsoundObj.loadScript(script_base + 'libcsound.js', () => {
         AudioWorkletGlobalScope.WAM = {}
         let WAM = AudioWorkletGlobalScope.WAM;
-        console.log(AudioWorkletGlobalScope);
 
         WAM["ENVIRONMENT"] = "WEB";
         WAM["print"] = (t) => console.log(t);
