@@ -31,7 +31,7 @@ function setup()
     textAlign(CENTER);
     background(0);
     button = createButton('Skip Intro - Play');
-    button.position(windowWidth*.46, windowHeight*.7);
+    button.position(windowWidth*.46, windowHeight*.65);
     button.mousePressed(playGame);
 }
 
