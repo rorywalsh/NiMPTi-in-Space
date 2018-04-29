@@ -18,7 +18,7 @@ var movedLeft = 0, movedRight = 0;
 var showIntroScreen = true;
 var typeIndex = 0;
 var introTimer =0  ;
-
+window.screen.lockOrientation('landscape-primary');
 // Shooting a red plant will increase the volume of track 1
 // Letting a red incoming wobbly plant hit you will decrease the volume of that track. 
 // Same logic applied to all colour plants, but you mst maintain a positive live count or it's game over. 
@@ -26,7 +26,6 @@ var introTimer =0  ;
 // Setup our canvas and create our stars
 function setup()
 {
-    window.screen.lockOrientation('landscape-primary');
     centreX = windowWidth / 2;
     centreY = windowHeight / 2;
     var cans = createCanvas(windowWidth, windowHeight);
@@ -56,9 +55,9 @@ function draw()
             {
                 offY = map(accelerationY, -90, 90, -5, 5);
                 offX = map(accelerationX, -90, 90, -5, 5);
-                if(offY > 1 || offY < -1)
+                if(int(offY) > 1 || int(offY) < -1)
                     memoryLevel-=0.1;
-                if(offX > 1 || offX < -1)
+                if(int(offX) > 1 || int(offX) < -1)
                     memoryLevel-=0.1;
             }
             drawScene();
@@ -67,8 +66,13 @@ function draw()
     {
         //basic code to indicate Csound is still loading...
         background(0, 0, 0);
-        fill(255);
-        text("...LOADING...", width / 2, height / 2);
+        fill(255, 255, 255, textAlpha);
+        text("...LOADING CSOUND...", width / 2, height / 2);
+        textAlpha += textAlphaSpeed;
+        if (textAlpha > 1 || textAlpha < 0)
+        {
+            textAlphaSpeed *= -1;
+        }
     }
 }
 
