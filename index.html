@@ -6,12 +6,21 @@
     <script src="scripts/p5.min.js"></script>
     <script src="scripts/p5.dom.min.js"></script>
     <script src="scripts/p5.sound.min.js"></script>
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
     <meta property="og:title" content="NiMPTi in Space" />
     <meta property="og:description" content="Simple game using Csound and p5js" />
   </head>
   <body>
+    <script>
+      // ServiceWorker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/NiMPTi-in-Space/sw.js')
+        .then(function() { console.log('Service Worker Registered'); });
+    }
+  </script>
     <script src="scripts/mobileCheck.js"></script>
     <script src="scripts/backgroundStar.js"></script>
     <script src="scripts/star.js"></script>
