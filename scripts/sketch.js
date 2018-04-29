@@ -55,9 +55,9 @@ function draw()
                 offY = map(accelerationY, -90, 90, -5, 5);
                 offX = map(accelerationX, -90, 90, -5, 5);
                 if(int(offY) > 1 || int(offY) < -1)
-                    memoryLevel-=0.5;
+                    memoryLevel-=1;
                 if(int(offX) > 1 || int(offX) < -1)
-                    memoryLevel-=0.5;
+                    memoryLevel-=1;
             }
             drawScene();
     }
