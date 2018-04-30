@@ -80,23 +80,14 @@ function drawScene()
     {
             stroke(0);
             fill(0);
-            rect(windowWidth*.4, windowHeight*.66, 500, 200);
+            rect(windowWidth*.4*androidScale, windowHeight*.66*androidScale, 500*androidScale, 200*androidScale);
             stroke(255);
             fill(255);
             textSize(80);
-            text("Game Over", windowWidth/2, windowHeight*.7);
-            textSize(25)
-            text("Tap screen/mouse to start again",  windowWidth/2, windowHeight*.7 + 50);
+            text("Game Over", windowWidth/2*androidScale, windowHeight*.7*androidScale);
+            textSize(25*androidScale)
+            text("Tap screen/mouse to start again",  windowWidth/2*androidScale, windowHeight*.7*androidScale + 50*androidScale);
             resetLevel();
-
-            if(mouseIsPressed)
-            {
-                gameOver=false;
-                cs.setControlChannel("turnoff", 0); 
-                cs.readScore('i"MainInstrument"	0 z');
-                createScene();
-                memoryLevel = 100;
-            }
 
     }
     else
@@ -199,7 +190,10 @@ function drawScene()
             fill(255);
             stroke(255);
             textAlign(CENTER);
-            textSize(14*androidScale)
+            if(androidScale<1)
+                textSize(8);
+            else
+                textSize(14);
             text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75*androidScale + shake);
             text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90*androidScale + shake);
             text("Score: " + String(score), 3*androidScale + shake, 105*androidScale + shake);
