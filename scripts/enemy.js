@@ -47,10 +47,10 @@ class Enemy
         
         if (mobileCheck.android)
         {
-            this.offY = map(accelerationY, -90, 90, -150, 150);
-            this.offX = map(accelerationX, -90, 90, -150, 150);
-            //this.x -= map(accelerationX, -90, 90, -25, 25);
-            //this.y -= map(accelerationY, -90, 90, -25, 25);
+            //this.offY = map(accelerationY, -90, 90, -150, 150);
+            //this.offX = map(accelerationX, -90, 90, -150, 150);
+            this.x -= map(accelerationX, -90, 90, -250, 250);
+            this.y -= map(accelerationY, -90, 90, -250, 250);
         }
 
         if(this.keyDown)
@@ -61,8 +61,8 @@ class Enemy
 
         if(this.radius<150)
         {
-            this.x = this.x + this.pos / windowWidth +sin(this.angle)*20*(this.radius/150)+this.offX;//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
-            this.y = this.y + this.pos / windowHeight +cos(this.angle)*20*(this.radius/150)+this.offY;//map(this.pos / windowHeight, 0, 1, 0, windowHeight / 2);;
+            this.x = this.x + this.pos / windowWidth +sin(this.angle)*20*(this.radius/150);//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
+            this.y = this.y + this.pos / windowHeight +cos(this.angle)*20*(this.radius/150);//map(this.pos / windowHeight, 0, 1, 0, windowHeight / 2);;
             this.radius = exp(this.pos*.1); 
         }
         else
