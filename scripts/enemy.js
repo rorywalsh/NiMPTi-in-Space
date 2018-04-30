@@ -9,8 +9,6 @@ class Enemy
         this.speed = 10;
         this.pos = 0;
         this.radius = 0;
-        this.offX = 0;
-        this.offY = 0;
         this.angle = random(.5);
         this.exitTrajectory = 2+random(20);
         this.keyDown = false;
@@ -47,10 +45,8 @@ class Enemy
         
         if (mobileCheck.android)
         {
-            //this.offY = map(accelerationY, -90, 90, -150, 150);
-            //this.offX = map(accelerationX, -90, 90, -150, 150);
-            this.x += map(accelerationY, -90, 90, -25, 25);
-            this.y += map(accelerationX, -90, 90, -25, 25);
+            this.x += map(accelerationX, -90, 90, -25, 25);
+            this.y += map(accelerationY, -90, 90, -25, 25);
         }
 
         if(this.keyDown)
