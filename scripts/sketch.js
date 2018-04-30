@@ -9,6 +9,7 @@ var trackOne = 0, trackTwo = 0, trackThree = 0, trackFour = 0, trackFive = 0;
 var closingBlinds = 0;
 var offX = 0, offY = 0;
 var screenTouch = false;
+var androidScale = 1;
 setTimeout(spawnFriendlyStar, 2000);
 setTimeout(spawnHostileStar, 2000);
 var numberOfRedStars = 0;
@@ -52,6 +53,7 @@ function draw()
     {
             if (mobileCheck.android)
             {
+                androidScale = .5;
                 offY = map(accelerationY, -90, 90, -5, 5);
                 offX = map(accelerationX, -90, 90, -5, 5);
                 if(int(offY) > 1 || int(offY) < -1)
@@ -186,26 +188,27 @@ function drawScene()
                 movedRight+=.1;
             }
               
-                
-            ellipse(0 + shake, 0 + shake, 50, 50);
-            line(0 + shake, -30 + shake, 0 + shake, -10 + shake);
-            line(0 + shake, +30 + shake, 0 + shake, +10 + shake);
-            line(-30 + shake, 0 + shake, -10 + shake, 0 + shake);
-            line(+30 + shake, 0 + shake, +10 + shake, 0 + shake);
-            rect(-100 + shake, -100 + shake, 200, 260);
+            
+            ellipse(0 + shake, 0 + shake, 50*androidScale, 50*androidScale);
+            line(0 + shake, -30*androidScale + shake, 0 + shake, -10*androidScale + shake);
+            line(0 + shake, +30*androidScale + shake, 0 + shake, +10*androidScale + shake);
+            line(-30 + shake, 0 + shake, -10*androidScale + shake, 0 + shake);
+            line(+30*androidScale + shake, 0 + shake, +10*androidScale + shake, 0 + shake);
+            rect(-100*androidScale + shake, -100*androidScale + shake, 200*androidScale, 260*androidScale);
             strokeWeight(1);
             fill(255);
             stroke(255);
             textAlign(CENTER);
-            text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75 + shake);
-            text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90 + shake);
-            text("Score: " + String(score), 3 + shake, 105 + shake);
+            textSize(14)
+            text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75*androidScale + shake);
+            text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90*androidScale + shake);
+            text("Score: " + String(score), 3*androidScale + shake, 105*androidScale + shake);
             textAlign(RIGHT);
-            text("Memory:", -10+shake, 130);
+            text("Memory:", -10*androidScale+shake, 130*androidScale);
 
             fill(150, 150, 150, 255);
             strokeWeight(0)
-            rect(-10+shake, 120, 70*(getMemoryLevel()/100), 15);
+            rect(-10*androidScale+shake, 120*androidScale, 70*androidScale*(getMemoryLevel()/100), 15*androidScale);
             translate(0,0)
             angleMode(RADIANS);
 
