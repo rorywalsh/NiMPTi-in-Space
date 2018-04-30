@@ -47,8 +47,8 @@ class Enemy
         
         if (mobileCheck.android)
         {
-            this.offY = map(accelerationY, -90, 90, -15, 15);
-            this.offX = map(accelerationX, -90, 90, -15, 15);
+            this.offY = map(accelerationY, -90, 90, -35, 35);
+            this.offX = map(accelerationX, -90, 90, -35, 35);
             //this.x -= map(accelerationX, -90, 90, -25, 25);
             //this.y -= map(accelerationY, -90, 90, -25, 25);
         }
