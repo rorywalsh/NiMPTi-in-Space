@@ -45,8 +45,8 @@ class Enemy
         
         if (mobileCheck.android)
         {
-            this.x += map(accelerationX, -90, 90, 25, -25);
-            this.y += map(accelerationY, -90, 90, 25, -25);
+            this.x += map(accelerationX, -90, 90, -25, 25);
+            this.y += map(accelerationY, -90, 90, -25, 25);
         }
 
         if(this.keyDown)
