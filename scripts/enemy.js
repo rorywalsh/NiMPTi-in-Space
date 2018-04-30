@@ -49,8 +49,8 @@ class Enemy
         {
             //this.offY = map(accelerationY, -90, 90, -150, 150);
             //this.offX = map(accelerationX, -90, 90, -150, 150);
-            this.x -= map(accelerationX, -90, 90, -250, 250);
-            this.y -= map(accelerationY, -90, 90, -250, 250);
+            this.x += map(accelerationX, -90, 90, -250, 250);
+            this.y += map(accelerationY, -90, 90, -250, 250);
         }
 
         if(this.keyDown)
