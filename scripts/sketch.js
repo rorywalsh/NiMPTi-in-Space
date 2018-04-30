@@ -192,14 +192,14 @@ function drawScene()
             ellipse(0 + shake, 0 + shake, 50*androidScale, 50*androidScale);
             line(0 + shake, -30*androidScale + shake, 0 + shake, -10*androidScale + shake);
             line(0 + shake, +30*androidScale + shake, 0 + shake, +10*androidScale + shake);
-            line(-30 + shake, 0 + shake, -10*androidScale + shake, 0 + shake);
+            line(-30*androidScale + shake, 0 + shake, -10*androidScale + shake, 0 + shake);
             line(+30*androidScale + shake, 0 + shake, +10*androidScale + shake, 0 + shake);
             rect(-100*androidScale + shake, -100*androidScale + shake, 200*androidScale, 260*androidScale);
             strokeWeight(1);
             fill(255);
             stroke(255);
             textAlign(CENTER);
-            textSize(14)
+            textSize(14*androidScale)
             text("Galactic Latt.: " + String(parseFloat(offX).toFixed(2)), 0 + shake, 75*androidScale + shake);
             text("Galactic Long.: " + String(parseFloat(offY).toFixed(2)), 0 + shake, 90*androidScale + shake);
             text("Score: " + String(score), 3*androidScale + shake, 105*androidScale + shake);
