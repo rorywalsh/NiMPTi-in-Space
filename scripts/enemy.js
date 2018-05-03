@@ -45,8 +45,8 @@ class Enemy
         
         if (mobileCheck.android)
         {
-            this.x += offX;
-            this.y += offY;
+            this.x -= offX*5;
+            this.y -= offY*5;
         }
 
         if(this.keyDown)
