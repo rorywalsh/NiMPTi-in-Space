@@ -13,6 +13,9 @@ class Enemy
         this.exitTrajectory = 2+random(20);
         this.keyDown = false;
         this.speedIncrease = 1;
+        this.androidScale = 1;
+        if(mobileCheck.android)
+        this.androidScale = .5;
     }
 
     update(offX, offY)
@@ -45,8 +48,8 @@ class Enemy
         
         if (mobileCheck.android)
         {
-            this.x -= offX*5;
-            this.y -= offY*5;
+            this.y += map(accelerationY, -90, 90, -25, 25);
+            this.x += map(accelerationX, -90, 90, 25, -25);
         }
 
         if(this.keyDown)
@@ -55,7 +58,7 @@ class Enemy
 
         strokeWeight(0);
 
-        if(this.radius<150)
+        if(this.radius<150*this.androidScale)
         {
             this.x = this.x + this.pos / windowWidth +sin(this.angle)*20*(this.radius/150);//map(this.pos / windowWidth, 0, 1, 0, windowWidth / 2);
             this.y = this.y + this.pos / windowHeight +cos(this.angle)*20*(this.radius/150);//map(this.pos / windowHeight, 0, 1, 0, windowHeight / 2);;
