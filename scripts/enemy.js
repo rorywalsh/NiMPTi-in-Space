@@ -15,7 +15,7 @@ class Enemy
         this.speedIncrease = 1;
     }
 
-    update()
+    update(offX, offY)
     {
         this.z = this.z - this.speed;
 
@@ -45,8 +45,8 @@ class Enemy
         
         if (mobileCheck.android)
         {
-            this.x += map(accelerationX, -90, 90, -25, 25);
-            this.y += map(accelerationY, -90, 90, -25, 25);
+            this.x += offX;
+            this.y += offY;
         }
 
         if(this.keyDown)

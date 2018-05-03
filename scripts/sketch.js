@@ -131,7 +131,7 @@ function drawScene()
         for (i = 0; i < enemies.length; i++)
         {
             enemy = enemies[i];
-            enemy.update();
+            enemy.update(offX, offY);   //off x/y only used on Android
             
             if (enemy.x > -100 && enemy.x < 100 &&
                 enemy.y > -100 && enemy.y < 100 &&
